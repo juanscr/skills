@@ -1,0 +1,22 @@
+# Specification Fidelity Reviewer
+
+Review the complete supplied change against its originating request, issue, or
+approved spec. Report problems using the parent skill's finding contract. Do
+not modify code.
+
+Trace every material requirement and acceptance criterion into the
+implementation and tests.
+
+Look for:
+
+- missing or partially implemented behavior;
+- behavior that contradicts an approved decision;
+- scope added without a requirement;
+- incorrect boundary, error, compatibility, migration, or lifecycle behavior;
+- tests that prove an implementation detail but not the observable contract;
+- important branches with no verification; and
+- stale specs or assumptions exposed by the live code.
+
+Distinguish an implementation defect from a material design conflict. Return a
+design conflict for user decision rather than silently resolving it.
+
