@@ -151,17 +151,19 @@ On an explicit publish action:
    final review record.
 2. If HEAD changed or the worktree is not clean, rerun required validation and
    `code-review`; do not publish stale approval.
-3. Push only the recorded source branch.
-4. Create the pull request against the recorded target branch using the
+3. Invoke `pr-description` with the target branch, originating intent, complete
+   reviewed diff, commit list, validation, and linked artifacts. Use its output
+   unchanged as the PR description.
+4. Push only the recorded source branch.
+5. Create the pull request against the recorded target branch using the
    provider's approved companion skill or integration. Invoke
    `azure-devops-workflow` for Azure DevOps.
-5. Build the title and description from the approved phase outcome, acceptance
-   criteria, changed behavior, and validation. Link the phase spec or task
-   artifact when accessible.
-6. Update the phase to `review` and record the PR URL, creation time, commits,
+6. Build the title from the observable outcome. Never expose internal planning
+   vocabulary in the title or description.
+7. Update the phase to `review` and record the PR URL, creation time, commits,
    and exact next action in `execution-progress.html`.
-7. Preserve all earlier pull-request register entries.
-8. Stop and wait for review feedback or the user's merge report.
+8. Preserve all earlier pull-request register entries.
+9. Stop and wait for review feedback or the user's merge report.
 
 Never mark the phase `complete`. `continue-plan` does that only after the user
 reports that the pull request merged.

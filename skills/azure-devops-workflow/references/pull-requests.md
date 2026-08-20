@@ -29,6 +29,9 @@ closed threads as review history.
 
 Push the source branch with Git before creating the PR. Confirm that the local
 HEAD is the reviewed commit the caller approved for publication.
+Require the caller to invoke `pr-description` and supply its completed
+template-compliant description. Do not synthesize a replacement description in
+this provider adapter.
 
 ```text
 az repos pr create --repository <repository> --source-branch <source-branch> --target-branch <target-branch> --title <title> --description <description-lines> --work-items <work-item-ids> --draft <true-or-false> --org <organization> --project <project> --only-show-errors -o json

@@ -34,8 +34,9 @@ In an active Copilot CLI session, run `/skills reload` after installation.
    folder. Ask it to implement the current phase.
 3. `execute-phase` delegates implementation to a TDD sub-agent, runs
    `code-review`, fixes retained findings, and stops with reviewed local commits.
-4. Tell the agent to publish. It pushes the approved branch, creates the PR, and
-   records the URL in execution progress.
+4. Tell the agent to publish. `pr-description` follows the repository template,
+   then the agent pushes the approved branch, creates the PR, and records its
+   URL in execution progress.
 5. Use `/continue-plan` for phase feedback or to report that the PR merged.
    Continue with the next eligible phase.
 
@@ -48,6 +49,8 @@ an existing PR; it always waits for approval before posting feedback.
   questions.
 - `/wait-what` asks the agent to re-explain its last response with more context
   and simpler language.
+- `pr-description` prepares every PR description from the repository template,
+  intent, architecture, validation, and future direction.
 - `writing-for-agents` guides creation of skills and other documents consumed by
   agents.
 
