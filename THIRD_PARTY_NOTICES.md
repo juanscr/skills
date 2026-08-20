@@ -1,7 +1,8 @@
 # Third-Party Notices
 
-The `grilling` and `wait-what` skills are copied from
-[mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills/productivity).
+The `grilling` and `wait-what` skills are copied from, and the `tdd` skill is
+adapted from,
+[mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 
 ## mattpocock/skills
 
