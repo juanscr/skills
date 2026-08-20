@@ -1,0 +1,2 @@
+# Optional private Azure DevOps defaults. Prefer ~/.copilot/azure-devops.json.
+skills/azure-devops-workflow/resources/config.local.json

@@ -27,8 +27,8 @@ encoded in the URL.
 
 - **Azure DevOps:** invoke `azure-devops-workflow` before retrieving any PR,
   repository, work-item, iteration, thread, or diff data. Follow that skill and
-  use its MCP integration. Do not use REST calls, `curl`, PowerShell, or
-  hand-built authentication.
+  use its authenticated Azure CLI workflow. Do not use direct REST calls,
+  `curl`, PowerShell HTTP calls, or hand-built authentication.
 - **GitHub:** use GitHub MCP tools for PR, issue, commit, file, check, review,
   and comment data. Do not scrape pages or use hand-built authenticated calls.
 - **Unsupported provider:** stop and explain that only GitHub and Azure DevOps
@@ -153,7 +153,7 @@ After explicit approval:
 6. Never post clean-area observations or low-value feedback.
 7. Report the URLs or identifiers of comments actually created.
 
-Use the provider's approved MCP or companion-skill write operation. If no write
-operation is available, state that posting is unavailable and do not work
-around it with raw authenticated requests.
-
+Use the provider's approved integration. For Azure DevOps, invoke
+`azure-devops-workflow`; for GitHub, use the available GitHub provider tools. If
+no write operation is available, state that posting is unavailable and do not
+work around it with raw authenticated requests.

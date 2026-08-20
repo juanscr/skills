@@ -153,7 +153,8 @@ On an explicit publish action:
    `code-review`; do not publish stale approval.
 3. Push only the recorded source branch.
 4. Create the pull request against the recorded target branch using the
-   provider's approved companion skill or MCP integration.
+   provider's approved companion skill or integration. Invoke
+   `azure-devops-workflow` for Azure DevOps.
 5. Build the title and description from the approved phase outcome, acceptance
    criteria, changed behavior, and validation. Link the phase spec or task
    artifact when accessible.

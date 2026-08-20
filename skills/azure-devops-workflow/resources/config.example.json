@@ -1,0 +1,5 @@
+{
+  "organization": "https://dev.azure.com/<organization>",
+  "project": "<optional-default-project>",
+  "repository": "<optional-default-repository>"
+}
