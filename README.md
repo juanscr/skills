@@ -1,10 +1,60 @@
 # Skills
 
-Personal AI-agent skills for a smoother development workflow.
+Personal Copilot CLI skills for understanding, designing, implementing, and
+reviewing software with AI while keeping engineering decisions human-owned.
+
+## Install
+
+Run from PowerShell:
+
+```powershell
+.\scripts\install.ps1
+```
+
+The script registers this repository's `skills` directory with Copilot CLI and
+removes the deprecated personal skills that these versions replace. It preserves
+the machine-specific `repository-locations` skill.
+
+In an active Copilot CLI session, run `/skills reload` after installation.
+
+## Main entrypoints
+
+| Skill | Use it when |
+| --- | --- |
+| `/design-plan` | Start a complex feature with repository research, decision grilling, teaching-focused HTML specs, and explicit understanding gates. |
+| `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
+| `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
+| `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
+
+## Expected flow
+
+1. Invoke `/design-plan` in the target repository. Approve the overall design
+   and each phase only after you can explain the design end to end.
+2. Start a fresh session and invoke `/continue-plan` with the generated feature
+   folder. Ask it to implement the current phase.
+3. `execute-phase` delegates implementation to a TDD sub-agent, runs
+   `code-review`, fixes retained findings, and stops with reviewed local commits.
+4. Tell the agent to publish. It pushes the approved branch, creates the PR, and
+   records the URL in execution progress.
+5. Use `/continue-plan` for phase feedback or to report that the PR merged.
+   Continue with the next eligible phase.
+
+Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
+an existing PR; it always waits for approval before posting feedback.
+
+## Miscellaneous
+
+- `/grilling` stress-tests a plan, decision, or idea through decision-frontier
+  questions.
+- `/wait-what` asks the agent to re-explain its last response with more context
+  and simpler language.
+- `writing-for-agents` guides creation of skills and other documents consumed by
+  agents.
 
 ## Credits
 
-`grilling` and `wait-what` are copied from, and `tdd` is adapted from,
+`grilling`, `wait-what`, and `writing-for-agents` are copied from, and `tdd` is
+adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
