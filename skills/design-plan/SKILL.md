@@ -159,11 +159,12 @@ Before creating the continuation record, obtain and record:
 - phase dependency and merge gates;
 - target branch;
 - required validation;
-- the selected GPT execution model for each phase; and
+- the selected LLM execution model for each phase; and
 - any external task artifact links.
 
-Use Luna for small phases and Terra for other phases. Use Sol only when a phase
-requires unusually complex analysis. Do not use a non-GPT model.
+Use Claude Sonnet for small phases and Claude Opus for other phases. Use GPT
+Sol only when a phase requires unusually complex analysis. Never use more than
+medium reasoning.
 
 ### 7. Create the continuation record
 
