@@ -25,6 +25,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
+| `/improve-codebase-architecture` | Identify deepening opportunities and save each as a reusable architecture-improvement spec. |
 
 ## Expected flow
 
@@ -49,6 +50,9 @@ an existing PR; it always waits for approval before posting feedback.
   questions.
 - `/wait-what` asks the agent to re-explain its last response with more context
   and simpler language.
+- `/improve-codebase-architecture` creates one candidate spec per finding under
+  `~/Documents/coding-specs/<repository>/architecture-improvements/`. Select a
+  candidate and use it as input to `/design-plan`.
 - `pr-description` prepares every PR description from the repository template,
   intent, architecture, validation, and future direction.
 - `writing-for-agents` guides creation of skills and other documents consumed by
@@ -56,8 +60,8 @@ an existing PR; it always waits for approval before posting feedback.
 
 ## Credits
 
-`grilling`, `wait-what`, and `writing-for-agents` are copied from, and `tdd` is
-adapted from,
+`grilling`, `wait-what`, `writing-for-agents`, and
+`improve-codebase-architecture` are copied from, and `tdd` is adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

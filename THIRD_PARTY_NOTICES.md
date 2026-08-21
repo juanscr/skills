@@ -1,7 +1,8 @@
 # Third-Party Notices
 
-The `grilling`, `wait-what`, and `writing-for-agents` skills are copied from,
-and the `tdd` skill is adapted from,
+The `grilling`, `wait-what`, `writing-for-agents`, and
+`improve-codebase-architecture` skills are copied from, and the `tdd` skill is
+adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 
 ## mattpocock/skills
