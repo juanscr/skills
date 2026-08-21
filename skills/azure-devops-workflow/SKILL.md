@@ -22,7 +22,7 @@ Read the reference for the requested artifact:
 Never hard-code an organization, project, repository, identity, or credential
 in this public skill.
 
-Resolve configuration in this order:
+Select the first existing configuration source in this order:
 
 1. the path in `COPILOT_AZURE_DEVOPS_CONFIG`;
 2. `~\.copilot\azure-devops.json`; or
@@ -32,7 +32,10 @@ The public shape is in
 [`resources/config.example.json`](resources/config.example.json).
 
 `organization` is required. `project` and `repository` are optional defaults.
-An explicit user value or parsed artifact URL overrides a default.
+An explicit user value or parsed artifact URL overrides a default. The selected
+configuration must parse as JSON and provide a non-empty absolute `http` or
+`https` organization URI. If it does not, report the selected source and stop;
+do not silently fall through to another source.
 
 Read the JSON with a parser. Do not source it as a script, print the complete
 file, commit it, copy it into logs, or add tokens to it.
@@ -53,12 +56,21 @@ Before the first operation:
 4. Load and validate the private configuration.
 5. Resolve the project and repository from the artifact URL, explicit request,
    private defaults, or current Azure DevOps Git remote. Ask when ambiguity
-   remains.
+   remains. For a legacy remote such as
+   `https://<account>.visualstudio.com/<collection>/<project>/_git/<repository>`,
+   preserve `https://<account>.visualstudio.com/<collection>/` as the
+   organization, with `<project>` as project and `<repository>` as repository.
 
 Pass `--org` and, when supported, `--project` explicitly from the resolved
 private values. Use `--only-show-errors -o json` for machine-readable
 operations. Do not call `az devops configure --defaults`; the private resource
 file remains the single default source.
+
+If an `az repos` operation run from an Azure DevOps worktree rejects a validated
+organization from its Git remote before making a mutation, retry it once from
+that worktree with `--detect true` instead of `--org`. Verify the resulting
+artifact after a successful retry. Do not retry an operation whose failure may
+have created or modified an artifact.
 
 Use native `az boards` and `az repos` commands first. When the extension lacks
 an operation, use `az devops invoke` with a named `--area` and `--resource`.

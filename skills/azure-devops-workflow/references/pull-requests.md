@@ -34,15 +34,21 @@ template-compliant description. Do not synthesize a replacement description in
 this provider adapter.
 
 ```text
-az repos pr create --repository <repository> --source-branch <source-branch> --target-branch <target-branch> --title <title> --description <description-lines> --work-items <work-item-ids> --draft <true-or-false> --org <organization> --project <project> --only-show-errors -o json
+az repos pr create --repository <repository> --source-branch <source-branch> --target-branch <target-branch> --title <title> --description <description-lines> --draft <true-or-false> --org <organization> --project <project> --only-show-errors -o json
 ```
 
 Include only approved options. Do not enable autocomplete, policy bypass,
 source-branch deletion, work-item transition, or squash unless the user or
 approved execution plan selected it.
 
+Add `--work-items <work-item-ids>` only when the supplied context or an approved
+plan identifies the work item, or when the user explicitly requests linking it.
+Otherwise omit the option; do not require or ask for a work item solely to
+create the PR.
+
 After creation, read the PR and verify repository, branches, title, draft
-state, linked work items, and source commit. Return the PR ID and URL.
+state, and source commit. When work items were linked, verify those links too.
+Return the PR ID and URL.
 
 Publishing an existing draft uses:
 
