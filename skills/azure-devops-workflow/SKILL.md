@@ -61,10 +61,14 @@ Before the first operation:
    preserve `https://<account>.visualstudio.com/<collection>/` as the
    organization, with `<project>` as project and `<repository>` as repository.
 
-Pass `--org` and, when supported, `--project` explicitly from the resolved
-private values. Use `--only-show-errors -o json` for machine-readable
-operations. Do not call `az devops configure --defaults`; the private resource
-file remains the single default source.
+Run `az repos` commands from the resolved repository root. This gives the
+extension the Git remote it needs when `--detect true` is required. Pass `--org`
+and, when supported by that exact subcommand, `--project` explicitly from the
+resolved private values. Check `az <command> --help` before a provider command:
+Azure DevOps extension subcommands do not all accept the same flags. Use
+`--only-show-errors -o json` for machine-readable operations. Do not call
+`az devops configure --defaults`; the private resource file remains the single
+default source.
 
 If an `az repos` operation run from an Azure DevOps worktree rejects a validated
 organization from its Git remote before making a mutation, retry it once from

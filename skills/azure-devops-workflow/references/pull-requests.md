@@ -1,6 +1,9 @@
 # Pull Requests
 
-Use native `az repos pr` commands for PR state and relationships. Use
+Use native `az repos pr` commands for PR state and relationships. Run each
+command from the repository root and use `--detect true` with the resolved
+organization. Check the selected subcommand's `--help` before running it:
+create, show, and work-item commands can accept different flag sets. Use
 `az devops invoke` only for threads, comments, iterations, or another operation
 without a native command.
 
@@ -10,7 +13,7 @@ value when the selected command supports it.
 ## Read a PR
 
 ```text
-az repos pr show --id <pr-id> --org <organization> --only-show-errors -o json
+az repos pr show --id <pr-id> --org <organization> --detect true --only-show-errors -o json
 ```
 
 For review or feedback work, also retrieve:
@@ -33,8 +36,14 @@ Require the caller to invoke `pr-description` and supply its completed
 template-compliant description. Do not synthesize a replacement description in
 this provider adapter.
 
+For a multiline description, pass each line as a separate value after
+`--description`; do not pass one multiline shell string. Read the created PR
+and verify that its stored description contains every required heading and
+paragraph. If it is truncated, repair it with `az repos pr update` using the
+same separate-line form, then read it again.
+
 ```text
-az repos pr create --repository <repository> --source-branch <source-branch> --target-branch <target-branch> --title <title> --description <description-lines> --draft <true-or-false> --org <organization> --project <project> --only-show-errors -o json
+az repos pr create --repository <repository> --source-branch <source-branch> --target-branch <target-branch> --title <title> --description <description-line> [<description-line> ...] [--work-items <work-item-ids>] --draft <true-or-false> --org <organization> --project <project> --detect true --only-show-errors -o json
 ```
 
 Include only approved options. Do not enable autocomplete, policy bypass,
@@ -47,13 +56,15 @@ Otherwise omit the option; do not require or ask for a work item solely to
 create the PR.
 
 After creation, read the PR and verify repository, branches, title, draft
-state, and source commit. When work items were linked, verify those links too.
-Return the PR ID and URL.
+state, stored description, and source commit. When work items were requested,
+verify those links too. If a requested link is absent, add it with
+`az repos pr work-item add`, then read the links again. Return the PR ID and
+URL.
 
 Publishing an existing draft uses:
 
 ```text
-az repos pr update --id <pr-id> --draft false --org <organization> --only-show-errors -o json
+az repos pr update --id <pr-id> --draft false --org <organization> --detect true --only-show-errors -o json
 ```
 
 ## Modify a PR
