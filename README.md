@@ -35,8 +35,9 @@ In an active Copilot CLI session, run `/skills reload` after installation.
    and each phase only after you can explain the design end to end.
 2. Start a fresh session and invoke `/continue-plan` with the generated feature
    folder. Ask it to implement the current phase.
-3. `execute-phase` delegates implementation to a TDD sub-agent, runs
-   `code-review`, fixes retained findings, and stops with reviewed local commits.
+3. `execute-phase` delegates implementation with TDD reserved for substantial
+   feature phases, runs `code-review`, fixes retained findings, and stops with
+   reviewed local commits.
 4. Tell the agent to publish. `pr-description` follows the repository template,
    then the agent pushes the approved branch, creates the PR, and records its
    URL in execution progress.
@@ -61,6 +62,8 @@ needs triage, approved implementation, and provider replies.
   intent, architecture, validation, and future direction.
 - `human-voice` writes concise responses in simple English and avoids redundant
   replies when a pull-request suggestion can simply be resolved.
+- `test-quality` supplies the shared rules for behavior-focused tests and
+  boundary-aware mocking used by implementation and code review.
 - `handoff` saves a concise, redacted continuation document outside the current
   workspace for a fresh agent.
 - `writing-for-agents` guides creation of skills and other documents consumed by
@@ -69,7 +72,8 @@ needs triage, approved implementation, and provider replies.
 ## Credits
 
 `grilling`, `handoff`, `wait-what`, `writing-for-agents`, and
-`improve-codebase-architecture` are copied from, and `tdd` is adapted from,
+`improve-codebase-architecture` are copied from, and `tdd` and `test-quality`
+are adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -46,6 +46,14 @@ Do not flag a named smell mechanically. Require concrete impact in the changed
 design and a fix that improves cohesion or clarity without speculative
 abstraction.
 
+## Test quality
+
+Apply the supplied `test-quality` references to every added or changed test.
+Flag tests that assert implementation details, repeat production logic in their
+expected values, use internal mocks, or fail to prove behavior callers care
+about. Require concrete false-confidence or maintainability impact rather than
+test-style preferences.
+
 ## Comment quality
 
 Inspect only comments introduced or changed by the diff.
@@ -68,4 +76,3 @@ constraints, or an otherwise invisible invariant. Recommend a concise `why`
 comment at the narrowest durable boundary. Do not use comments to compensate
 for a mysterious name, poor decomposition, or an avoidable design problem; fix
 the code structure instead.
-

@@ -45,4 +45,3 @@ const api = {
 
 Each test double should represent one external operation and one response
 shape. Avoid conditional mock logic that recreates the production client.
-

@@ -20,6 +20,12 @@ This skill does not edit code, post comments, or perform provider-specific pull
 request operations. The implementation agent fixes accepted findings and may
 invoke this skill again.
 
+## Required skill
+
+Read `test-quality` and both of its references before reviewing any added or
+changed tests. If it is unavailable, stop and tell the user to make it
+available.
+
 ## Inputs
 
 | Input | Required | Description |
@@ -78,6 +84,8 @@ Launch all three reviewers in parallel. Give each:
 
 - the absolute path to its role file under this skill's `references` directory,
   with an instruction to read it before reviewing;
+- the absolute path to `test-quality` and both references, with an instruction
+  to apply them to every added or changed test;
 - the fixed-point and review-head SHAs;
 - the exact diff and commit-list commands;
 - the complete changed-file list and diff;

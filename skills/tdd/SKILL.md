@@ -1,20 +1,23 @@
 ---
 name: tdd
-description: Implement an approved phase spec through behavior-focused red-green cycles. Use as the implementation method inside execute-phase.
+description: Implement a substantial approved feature phase through behavior-focused red-green slices. Use only for large feature work with multiple observable behaviors, not routine CI, test-only, narrow bug-fix, or small refactoring changes.
 ---
 
 # Test-Driven Development
 
-Implement one approved phase spec through repeated red -> green vertical
-slices. The phase spec defines the required behavior, acceptance criteria, public
-seams, and verification. The live repository defines the current code. Follow
-explicit repository guidance, but return a material conflict with the approved
-phase spec for user decision.
+Implement one substantial approved feature phase through repeated red -> green
+vertical slices. The phase spec defines the required behavior, acceptance
+criteria, public seams, and verification. The live repository defines the
+current code. Follow explicit repository guidance, but return a material
+conflict with the approved phase spec for user decision.
 
-Read:
+This workflow is proportionate when the feature contains multiple related
+observable behaviors that benefit from incremental vertical slices. Use direct
+implementation and targeted validation for CI or build configuration, test-only
+changes, narrow bug fixes, documentation, and small behavior-preserving
+refactors.
 
-- [Good and bad tests](references/tests.md)
-- [Mocking](references/mocking.md)
+Read the `test-quality` skill and both of its references before writing tests.
 
 ## Input
 

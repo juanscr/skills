@@ -1,12 +1,12 @@
 ---
 name: execute-phase
-description: Execute one approved feature phase with a TDD sub-agent, review and fix the complete phase diff, then wait for approval before pushing and opening a pull request.
+description: Execute one approved feature phase with a proportionate implementation method, review and fix the complete phase diff, then wait for approval before publishing.
 ---
 
 # Execute Phase
 
 Execute exactly one approved phase. A dedicated implementation sub-agent owns
-the TDD work and review fixes. This skill orchestrates state, review, and
+the implementation and review fixes. This skill orchestrates state, review, and
 handoff; it does not implement the phase in the main conversation.
 The main agent must not write production code or tests for the phase.
 
@@ -16,10 +16,11 @@ request.
 
 ## Required skills
 
-- `tdd`
+- `test-quality`
 - `code-review`
 
-If either skill is unavailable, stop and tell the user to make it available.
+`tdd` is required only when substantial feature work selects that method. If a
+required skill is unavailable, stop and tell the user to make it available.
 
 ## Inputs
 
@@ -61,7 +62,24 @@ If live code materially contradicts an approved design decision, mark the phase
 Before dispatch, set the phase to `in progress` and record the agent, starting
 SHA, branch, timestamp, and exact next action in `execution-progress.html`.
 
-## 2. Implement through a TDD sub-agent
+## 2. Select the implementation method
+
+Use TDD only for substantial feature behavior with multiple related observable
+behaviors that can be delivered as vertical slices.
+
+Use direct implementation for:
+
+- CI, build, or repository configuration;
+- test-only changes;
+- documentation;
+- narrow bug fixes; and
+- small behavior-preserving refactors.
+
+When scope is mixed, use TDD only for the substantial feature behavior and
+implement the narrower supporting work directly. Record the selected method and
+why in execution progress.
+
+## 3. Implement through one sub-agent
 
 Launch one implementation sub-agent using the phase's recorded model. Give it:
 
@@ -69,11 +87,13 @@ Launch one implementation sub-agent using the phase's recorded model. Give it:
 - the phase spec and execution-progress paths;
 - the phase starting SHA;
 - repository guidance;
-- the absolute path to the `tdd` skill and its references;
+- the selected implementation method;
+- the absolute path to `test-quality` and its references;
+- the absolute path to `tdd` when the TDD method was selected;
 - approved validation commands; and
 - any recorded resume action or relevant pull-request feedback.
 
-Require the agent to:
+For substantial feature work, require the agent to:
 
 1. Read the phase spec and live relevant code.
 2. Map acceptance criteria to approved public seams.
@@ -82,15 +102,25 @@ Require the agent to:
    slices.
 5. Implement only the current phase.
 6. Stop on a material design conflict rather than choosing new behavior.
-7. Commit the completed TDD implementation locally without pushing.
+7. Commit the completed implementation locally without pushing.
 8. Return red/green evidence, changed paths, validation, commit SHA, and any
    deviation or blocker.
+
+For direct implementation, require the agent to:
+
+1. Read the phase spec and live relevant code.
+2. Implement the smallest complete change that satisfies the phase.
+3. Follow `test-quality` for every added or changed test.
+4. Add or update tests only where they provide useful behavioral evidence.
+5. Run targeted validation and the recorded final validation.
+6. Commit locally without pushing.
+7. Return changed paths, validation, commit SHA, and any deviation or blocker.
 
 The main agent must verify the commit exists, the worktree is clean, and the
 reported validation corresponds to the phase. Update execution progress with
 the result.
 
-## 3. Review the complete phase
+## 4. Review the complete phase
 
 Invoke `code-review` with:
 
@@ -107,13 +137,14 @@ If review returns a material design decision, mark the phase `blocked`, record
 the decision needed, and wait for the user. Do not let the implementation agent
 resolve it implicitly.
 
-## 4. Fix findings
+## 5. Fix findings
 
 Send all retained blockers and material improvements to the same implementation
 sub-agent. Require it to reread the cited live code and:
 
 - fix each finding within the approved phase;
-- use a red -> green cycle when a fix changes or adds behavior;
+- preserve the selected implementation method, using red -> green only when the
+  phase qualifies for TDD;
 - preserve or add behavior-focused regression coverage;
 - run targeted and final validation; and
 - create a new local commit without amending or pushing.
@@ -127,9 +158,9 @@ same root issue survives two fix attempts, or reviewers produce a design
 conflict, mark the phase `blocked` and ask the user rather than looping
 indefinitely.
 
-## 5. Wait for publish approval
+## 6. Wait for publish approval
 
-When TDD, final validation, and the final code review are clean:
+When implementation, final validation, and the final code review are clean:
 
 1. Keep the phase `in progress`; a phase enters `review` only after its pull
    request exists.
@@ -143,7 +174,7 @@ When TDD, final validation, and the final code review are clean:
 Do not push, open a pull request, or post provider content until the user
 explicitly asks to publish.
 
-## 6. Publish the pull request
+## 7. Publish the pull request
 
 On an explicit publish action:
 
@@ -175,6 +206,7 @@ When the requested action is to address feedback on an existing phase PR:
 1. Retrieve the current approved feedback through the provider integration.
 2. Give only that feedback and the current phase context to an implementation
    sub-agent.
-3. Use TDD for behavior changes, run validation, commit locally, and run
-   `code-review` over the complete phase diff.
+3. Preserve the phase's selected implementation method, follow `test-quality`
+   for test changes, run validation, commit locally, and run `code-review` over
+   the complete phase diff.
 4. Wait for explicit approval before pushing the follow-up commits.

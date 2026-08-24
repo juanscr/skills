@@ -1,6 +1,6 @@
 ---
 name: address-pr-comments
-description: Address active GitHub or Azure DevOps pull-request feedback. Classify every current comment against the spec, wait for approval, implement with selective TDD, push, and reply in the user's voice.
+description: Address active GitHub or Azure DevOps pull-request feedback. Classify every current comment against the spec, wait for approval, implement proportionately, push, and reply in the user's voice.
 ---
 
 # Address Pull-Request Comments
@@ -139,19 +139,18 @@ changes. Do not create a replacement pull request or rewrite branch history.
 
 ## 6. Implement with the right test boundary
 
-For each approved change, choose the method from its observable effect:
+For each approved change, choose a proportionate method:
 
-- Use red -> green TDD for a public-facing API or contract change, externally
-  observable behavior change, or bug fix. Invoke `tdd` when the pull request
-  has the approved phase spec that skill requires; otherwise use the approved
-  comment plan as the behavior contract and run the same red -> green loop
-  directly. For a bug, add the smallest behavior-focused regression test that
-  reproduces it, confirm the expected red state, then implement the fix. If a
-  useful regression test is not feasible, record why and use the narrowest
-  reliable validation instead.
-- Make behavior-preserving refactors, naming changes, comments, and
-  documentation edits directly. Preserve existing tests and add no
-  implementation-detail tests merely to claim TDD.
+- Use red -> green TDD only when feedback changes substantial feature behavior
+  with multiple related observable slices and an approved phase spec. Invoke
+  `tdd` with that spec.
+- Implement narrow bug fixes, CI or build changes, test-only changes,
+  behavior-preserving refactors, naming changes, comments, and documentation
+  directly.
+- Follow `test-quality` whenever tests are added, changed, or reviewed. For a
+  bug, prefer a focused behavior-level regression test when it provides useful
+  evidence. If one is not feasible, record why and use the narrowest reliable
+  validation instead.
 
 Implement only approved Must fix and Good to have IDs. A user-approved No-Go
 override becomes an explicit scope decision; record that decision with the
