@@ -20,7 +20,7 @@ $deprecatedSkills = @(
     @{ Name = "execute-phase"; Directory = "execute-phase" }
     @{ Name = "juan-pr-review"; Directory = "juan-pr-review" }
     @{ Name = "mos3-rust-development"; Directory = "mos3-rust-development" }
-    @{ Name = "my-voice"; Directory = "my-voice" }
+    @{ Name = "human-voice"; Directory = "human-voice" }
     @{ Name = "refactoring-code"; Directory = "refactoring-code" }
     @{ Name = "writing-for-agents"; Directory = "writing-for-agents" }
 )

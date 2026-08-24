@@ -15,7 +15,7 @@ the loop with every commenter.
 | --- | --- | --- |
 | Pull request URL | Yes | A GitHub or Azure DevOps pull-request URL. |
 
-If `my-voice` is unavailable, stop and tell the user to make it available
+If `human-voice` is unavailable, stop and tell the user to make it available
 before analysis begins.
 
 ## 1. Select the provider and worktree
@@ -167,11 +167,11 @@ using the repository's commit conventions; never amend an existing commit.
 Confirm the provider head still equals the pre-implementation SHA, then push
 the new commit to the existing source branch without force.
 
-Invoke `my-voice` for each analyzed active comment. Follow its
+Invoke `human-voice` for each analyzed active comment. Follow its
 `RESOLVE_WITHOUT_REPLY` result for a suggestion applied as written: post no
 reply and resolve the thread after the pushed fix is verified.
 
-When `my-voice` returns reply text, post it separately to that comment:
+When `human-voice` returns reply text, post it separately to that comment:
 
 - for an implemented comment that needs context, state only the useful context
   not already clear from the diff;

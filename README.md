@@ -59,6 +59,8 @@ needs triage, approved implementation, and provider replies.
   candidate and use it as input to `/design-plan`.
 - `pr-description` prepares every PR description from the repository template,
   intent, architecture, validation, and future direction.
+- `human-voice` writes concise responses in simple English and avoids redundant
+  replies when a pull-request suggestion can simply be resolved.
 - `handoff` saves a concise, redacted continuation document outside the current
   workspace for a fresh agent.
 - `writing-for-agents` guides creation of skills and other documents consumed by
