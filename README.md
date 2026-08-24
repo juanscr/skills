@@ -12,8 +12,8 @@ Run from PowerShell:
 ```
 
 The script registers this repository's `skills` directory with Copilot CLI and
-removes the deprecated personal skills that these versions replace. It preserves
-the machine-specific `repository-locations` skill.
+verifies every repository skill is available. Existing personal skills are left
+unchanged.
 
 In an active Copilot CLI session, run `/skills reload` after installation.
 
