@@ -25,6 +25,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
+| `/address-pr-comments` | Classify active GitHub or Azure DevOps PR feedback, approve the response plan, then implement, push, and reply. |
 | `/improve-codebase-architecture` | Identify deepening opportunities and save each as a reusable architecture-improvement spec. |
 | `/handoff` | Compact the current conversation into a temporary handoff document for another agent. |
 
@@ -44,6 +45,8 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 
 Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
 an existing PR; it always waits for approval before posting feedback.
+Use `/address-pr-comments <URL>` when a PR already has active feedback that
+needs triage, approved implementation, and provider replies.
 
 ## Miscellaneous
 
