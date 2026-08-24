@@ -80,6 +80,23 @@ understand behavior and validate findings.
 
 ## 2. Launch three independent reviewers
 
+Classify the review once before dispatch:
+
+- **Small:** at most 10 reviewable changed files and 500 changed lines, confined
+  to one cohesive behavior, with no public API, schema, migration,
+  authorization, security, concurrency, or cross-process boundary change.
+- **Large:** every other change. When uncertain, classify the review as large.
+
+The parent agent selects each reviewer's configuration explicitly when
+launching it. Use `general-purpose` agents with these settings; do not omit the
+model or reasoning effort and do not ask a reviewer to choose its own:
+
+| Reviewer | Small review | Large review | Reasoning effort |
+| --- | --- | --- | --- |
+| Code quality and comments | `claude-sonnet-5` | `claude-opus-5` | `medium` |
+| Specification fidelity | `claude-sonnet-5` | `claude-opus-5` | `high` |
+| Skeptical risk | `gpt-5.6-sol` | `gpt-5.6-sol` | `high` |
+
 Launch all three reviewers in parallel. Give each:
 
 - the absolute path to its role file under this skill's `references` directory,
