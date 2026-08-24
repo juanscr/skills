@@ -26,6 +26,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
 | `/improve-codebase-architecture` | Identify deepening opportunities and save each as a reusable architecture-improvement spec. |
+| `/handoff` | Compact the current conversation into a temporary handoff document for another agent. |
 
 ## Expected flow
 
@@ -55,12 +56,14 @@ an existing PR; it always waits for approval before posting feedback.
   candidate and use it as input to `/design-plan`.
 - `pr-description` prepares every PR description from the repository template,
   intent, architecture, validation, and future direction.
+- `handoff` saves a concise, redacted continuation document outside the current
+  workspace for a fresh agent.
 - `writing-for-agents` guides creation of skills and other documents consumed by
   agents.
 
 ## Credits
 
-`grilling`, `wait-what`, `writing-for-agents`, and
+`grilling`, `handoff`, `wait-what`, `writing-for-agents`, and
 `improve-codebase-architecture` are copied from, and `tdd` is adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
