@@ -5,10 +5,9 @@ description: Execute one approved feature phase with a proportionate implementat
 
 # Execute Phase
 
-Execute exactly one approved phase. A dedicated implementation sub-agent owns
-the implementation and review fixes. This skill orchestrates state, review, and
-handoff; it does not implement the phase in the main conversation.
-The main agent must not write production code or tests for the phase.
+Execute exactly one approved phase. The main agent owns implementation, tests,
+validation, review fixes, state, and handoff. Use sub-agents only when
+independent work benefits from parallel or isolated context.
 
 The initial endpoint is a validated, reviewed local branch with committed
 changes. Stop there and wait for the user to approve publishing the pull
@@ -16,11 +15,11 @@ request.
 
 ## Required skills
 
-- `test-quality`
 - `code-review`
 
-`tdd` is required only when substantial feature work selects that method. If a
-required skill is unavailable, stop and tell the user to make it available.
+Use `test-quality` whenever tests are added or changed. Use `tdd` only for
+substantial feature work with multiple observable behaviors. If a skill is
+needed but unavailable, stop and tell the user to make it available.
 
 ## Inputs
 
@@ -31,9 +30,9 @@ required skill is unavailable, stop and tell the user to make it available.
 | Execution progress | Yes | `execution-progress.html` for the feature. |
 | Requested action | Yes | Implement/resume, address feedback, or publish the reviewed phase. |
 
-Use the repository, branch strategy, target branch, validation, execution
-model, and pull-request strategy recorded in the approved artifacts. Do not
-select substitutes.
+Use the repository, branch strategy, target branch, validation, and
+pull-request strategy recorded in the approved artifacts. Do not select
+substitutes.
 
 ## 1. Restore and validate state
 
@@ -59,70 +58,33 @@ If live code materially contradicts an approved design decision, mark the phase
 `blocked`, record the conflict and exact next action, and return to
 `design-plan`.
 
-Before dispatch, set the phase to `in progress` and record the agent, starting
+Before implementation, set the phase to `in progress` and record the starting
 SHA, branch, timestamp, and exact next action in `execution-progress.html`.
 
-## 2. Select the implementation method
+## 2. Implement the phase
 
-Use TDD only for substantial feature behavior with multiple related observable
-behaviors that can be delivered as vertical slices.
+Use TDD only for substantial feature work with multiple related observable
+behaviors. Implement refactoring, CI or build configuration, test-only work,
+documentation, narrow bug fixes, and other straightforward changes directly.
+For mixed work, use TDD only for the substantial feature behavior.
 
-Use direct implementation for:
+Read the relevant live code and implement only the approved phase. Follow
+`test-quality` for every added or changed test. Run targeted validation while
+working and the recorded final validation when the phase is complete.
 
-- CI, build, or repository configuration;
-- test-only changes;
-- documentation;
-- narrow bug fixes; and
-- small behavior-preserving refactors.
+Use sub-agents at the main agent's discretion for genuinely independent
+parallel work. The main agent remains responsible for integrating their work
+and for the complete phase outcome.
 
-When scope is mixed, use TDD only for the substantial feature behavior and
-implement the narrower supporting work directly. Record the selected method and
-why in execution progress.
+Stop on a material design conflict rather than choosing new behavior. Otherwise
+complete the phase, commit it locally without pushing, and update execution
+progress with the changed paths, validation, commit SHA, and any approved
+deviation.
 
-## 3. Implement through one sub-agent
+## 3. Review the complete phase
 
-Launch one implementation sub-agent using the phase's recorded model. Give it:
-
-- the absolute repository path and current branch;
-- the phase spec and execution-progress paths;
-- the phase starting SHA;
-- repository guidance;
-- the selected implementation method;
-- the absolute path to `test-quality` and its references;
-- the absolute path to `tdd` when the TDD method was selected;
-- approved validation commands; and
-- any recorded resume action or relevant pull-request feedback.
-
-For substantial feature work, require the agent to:
-
-1. Read the phase spec and live relevant code.
-2. Map acceptance criteria to approved public seams.
-3. Execute one red -> green vertical slice at a time.
-4. Run targeted validation during the loop and final validation once after all
-   slices.
-5. Implement only the current phase.
-6. Stop on a material design conflict rather than choosing new behavior.
-7. Commit the completed implementation locally without pushing.
-8. Return red/green evidence, changed paths, validation, commit SHA, and any
-   deviation or blocker.
-
-For direct implementation, require the agent to:
-
-1. Read the phase spec and live relevant code.
-2. Implement the smallest complete change that satisfies the phase.
-3. Follow `test-quality` for every added or changed test.
-4. Add or update tests only where they provide useful behavioral evidence.
-5. Run targeted validation and the recorded final validation.
-6. Commit locally without pushing.
-7. Return changed paths, validation, commit SHA, and any deviation or blocker.
-
-The main agent must verify the commit exists, the worktree is clean, and the
-reported validation corresponds to the phase. Update execution progress with
-the result.
-
-## 4. Review the complete phase
-
-Invoke `code-review` with:
+An isolated `code-review` over the complete phase diff is required before every
+pull-request publication. Invoke it with:
 
 - fixed point: the recorded phase starting SHA;
 - review head: current local HEAD;
@@ -134,23 +96,14 @@ Do not replace the fixed point after review fixes. Every review covers the
 complete phase change from its original starting SHA.
 
 If review returns a material design decision, mark the phase `blocked`, record
-the decision needed, and wait for the user. Do not let the implementation agent
-resolve it implicitly.
+the decision needed, and wait for the user. Do not resolve it implicitly.
 
-## 5. Fix findings
+## 4. Fix findings
 
-Send all retained blockers and material improvements to the same implementation
-sub-agent. Require it to reread the cited live code and:
-
-- fix each finding within the approved phase;
-- preserve the selected implementation method, using red -> green only when the
-  phase qualifies for TDD;
-- preserve or add behavior-focused regression coverage;
-- run targeted and final validation; and
-- create a new local commit without amending or pushing.
-
-Verify the returned commit, clean worktree, and validation. Record the fixes and
-commit in execution progress.
+Fix every retained blocker and material improvement within the approved phase.
+Add behavior-focused regression coverage where it is useful, run targeted and
+final validation, and create a new local commit without amending or pushing.
+Record the fixes and commit in execution progress.
 
 Run `code-review` again over the full starting-SHA-to-HEAD diff. Repeat the
 fix-and-review loop until no blocker or material improvement remains. If the
@@ -158,7 +111,7 @@ same root issue survives two fix attempts, or reviewers produce a design
 conflict, mark the phase `blocked` and ask the user rather than looping
 indefinitely.
 
-## 6. Wait for publish approval
+## 5. Wait for publish approval
 
 When implementation, final validation, and the final code review are clean:
 
@@ -174,7 +127,7 @@ When implementation, final validation, and the final code review are clean:
 Do not push, open a pull request, or post provider content until the user
 explicitly asks to publish.
 
-## 7. Publish the pull request
+## 6. Publish the pull request
 
 On an explicit publish action:
 
@@ -204,9 +157,7 @@ reports that the pull request merged.
 When the requested action is to address feedback on an existing phase PR:
 
 1. Retrieve the current approved feedback through the provider integration.
-2. Give only that feedback and the current phase context to an implementation
-   sub-agent.
-3. Preserve the phase's selected implementation method, follow `test-quality`
-   for test changes, run validation, commit locally, and run `code-review` over
-   the complete phase diff.
+2. Address only that feedback within the current phase.
+3. Follow `test-quality` for test changes, run validation, commit locally, and
+   run `code-review` over the complete phase diff.
 4. Wait for explicit approval before pushing the follow-up commits.
