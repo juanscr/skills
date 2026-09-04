@@ -15,6 +15,18 @@ Read and follow:
 Read `test-quality` and both references before reviewing added or changed
 tests. If unavailable when tests changed, stop and tell the user.
 
+## Leaf reviewer boundary
+
+This skill owns review orchestration. Every reviewer it launches is a leaf
+agent.
+
+Prefix every reviewer task with `CODE_REVIEW_LEAF: true` and tell the reviewer
+to perform the supplied role directly with read-only tools. A task carrying
+that marker must not invoke any skill, launch an agent, or repeat this skill's
+pin, dispatch, or synthesis steps. If a leaf agent invokes this skill despite
+the task boundary, it must stop at this section and return to its supplied
+review role without dispatching.
+
 ## Inputs
 
 | Input | Required | Description |
@@ -65,7 +77,8 @@ the behavior and contracts the changed artifact controls.
 
 Launch one `general-purpose` reviewer using `gpt-5.6-terra` at high effort.
 Give it the absolute paths to `review-contract.md`, `combined-reviewer.md`, and
-the `test-quality` references when tests changed.
+the `test-quality` references when tests changed. Apply the leaf reviewer
+boundary above.
 
 Use three independent reviewers when the change modifies production behavior
 and the lenses have materially different contracts or call paths to inspect:
@@ -78,6 +91,7 @@ and the lenses have materially different contracts or call paths to inspect:
 
 Launch all three in parallel. Each receives:
 
+- the leaf reviewer marker and boundary above;
 - the absolute path to `references/review-contract.md`;
 - the absolute path to its role file: `code-quality-reviewer.md`,
   `specification-fidelity-reviewer.md`, or `skeptical-risk-reviewer.md`;
@@ -92,7 +106,7 @@ Launch all three in parallel. Each receives:
 Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
 Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
 delta since the Deep-review head, originating intent, validation evidence, and
-relevant directly coupled source.
+relevant directly coupled source. Apply the leaf reviewer boundary above.
 
 If the delta meets a Deep invalidation condition, stop and return
 `deep review required` instead of performing Light review.
@@ -103,6 +117,7 @@ Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
 Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
 since the reviewed head, retained findings, resolution commits, originating
 intent, validation evidence, and directly coupled source.
+Apply the leaf reviewer boundary above.
 
 If the delta expands beyond retained findings, return `light review required`.
 If it meets a Deep invalidation condition, return `deep review required`.

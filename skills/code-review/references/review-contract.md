@@ -3,6 +3,12 @@
 All review modes are independent, read-only analysis of a pinned change. The
 implementation workflow and CI own validation.
 
+## Leaf execution
+
+Perform the assigned review directly. Use read-only source navigation and
+return findings to the parent orchestrator; do not delegate any part of the
+review to another agent.
+
 ## Do not become CI
 
 Consume supplied validation commands, results, and provider check status as
