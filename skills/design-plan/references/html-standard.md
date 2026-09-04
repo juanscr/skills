@@ -25,6 +25,13 @@ they clarify a decision. Give every visual a plain-English explanation. Use real
 names for repository code and clearly label proposed names. Do not use Mermaid
 or external assets.
 
+When an inline SVG materially clarifies the design, the main agent may launch
+one `general-purpose` agent using `claude-sonnet-5` at medium effort solely to
+create the SVG fragment. Supply the finalized diagram content, labels,
+relationships, placement constraints, and accessibility requirements. The
+sub-agent returns only the self-contained SVG markup; the main agent integrates
+it into the document and remains responsible for its factual accuracy.
+
 ## Quality gate
 
 Before presenting a file:

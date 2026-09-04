@@ -77,11 +77,10 @@ Choose coherent, reviewable behavior slices. Avoid infrastructure-only slices
 unless independently useful. Explain why each dependency and phase boundary
 exists, while allowing a phase to split later when execution produces evidence.
 
-For Deep mode, delegate drafting and presentation to a Claude Opus sub-agent.
-For Standard mode, delegate only when the design or presentation benefits from
-isolated context. Draft Brief mode directly. Give any drafting sub-agent the
-approved design, evidence, mode, format, and artifact requirements, including
-the audience boundary and proportionality requirement.
+Draft and present every planning mode with the main agent so repository
+evidence, decisions, and document context remain continuous. When an HTML
+diagram earns its place, use only the bounded SVG delegation defined by the
+HTML standard.
 
 The main agent owns factual accuracy and software design. Resolve specific gaps
 through repository research or focused `grilling`; do not expand the decision
@@ -102,9 +101,9 @@ settle the outcome, boundary, public contracts, acceptance criteria, and
 verification needed to implement safely. It may leave internal implementation
 choices to execution.
 
-Use the same delegation rule as the overall plan. Present the phase for explicit
-approval. Offer to draft later phases now only when the user wants that work or
-their contracts must be settled to make the current phase safe.
+Present the phase for explicit approval. Offer to draft later phases now only
+when the user wants that work or their contracts must be settled to make the
+current phase safe.
 
 Before the Agent's log exists, incorporate new evidence into the affected draft,
 mark approved text superseded when needed, and obtain approval for the changed

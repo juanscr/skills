@@ -63,23 +63,18 @@ another cohesive change where separate lenses would traverse substantially the
 same evidence. File extension alone does not decide the profile; classify by
 the behavior and contracts the changed artifact controls.
 
-Launch one `general-purpose` reviewer using `claude-sonnet-5` at high effort.
+Launch one `general-purpose` reviewer using `gpt-5.6-terra` at high effort.
 Give it the absolute paths to `review-contract.md`, `combined-reviewer.md`, and
 the `test-quality` references when tests changed.
 
 Use three independent reviewers when the change modifies production behavior
 and the lenses have materially different contracts or call paths to inspect:
 
-| Reviewer | Small change | Large change | Effort |
-| --- | --- | --- | --- |
-| Code quality and comments | `claude-sonnet-5` | `claude-opus-5` | medium |
-| Specification fidelity | `claude-sonnet-5` | `claude-opus-5` | high |
-| Skeptical risk | `gpt-5.6-sol` | `gpt-5.6-sol` | high |
-
-A change is Small only when it has at most 10 reviewable files and 500 changed
-lines, one cohesive behavior, and no public API, schema, migration,
-authorization, security, concurrency, persistence, or cross-process boundary.
-Every other change is Large.
+| Reviewer | Model | Effort |
+| --- | --- | --- |
+| Code quality and comments | `gpt-5.6-terra` | high |
+| Specification fidelity | `gpt-5.6-terra` | high |
+| Skeptical risk | `gpt-5.6-sol` | high |
 
 Launch all three in parallel. Each receives:
 
@@ -94,7 +89,7 @@ Launch all three in parallel. Each receives:
 
 ### Light
 
-Launch one `general-purpose` reviewer using `claude-sonnet-5` at medium effort.
+Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
 Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
 delta since the Deep-review head, originating intent, validation evidence, and
 relevant directly coupled source.
@@ -104,7 +99,7 @@ If the delta meets a Deep invalidation condition, stop and return
 
 ### Verify
 
-Launch one `general-purpose` reviewer using `claude-sonnet-5` at medium effort.
+Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
 Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
 since the reviewed head, retained findings, resolution commits, originating
 intent, validation evidence, and directly coupled source.
