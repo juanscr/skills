@@ -38,9 +38,10 @@ In an active Copilot CLI session, run `/skills reload` after installation.
    before implementation when needed.
 3. `execute-phase` implements with TDD reserved for substantial feature
    behavior. Ordinary implementation choices remain with the agent; evidence
-   that changes an approved invariant routes through `amend-plan`. It then runs
-   `code-review`, fixes blockers and proportionate findings, and stops with
-   reviewed local commits.
+   that changes an approved invariant routes through `amend-plan`. It runs one
+   Deep `code-review`, then uses finding-only Verify or one-reviewer Light mode
+   for fixes unless later changes invalidate the Deep review. Reviewers consume
+   validation evidence rather than rerunning CI gates.
 4. Tell the agent to publish. `pr-description` follows the repository template,
    then the agent pushes the approved branch, creates the PR, and records its
    URL in execution progress.

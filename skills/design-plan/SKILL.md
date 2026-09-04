@@ -31,9 +31,6 @@ replaced design text as superseded instead of erasing why it changed.
 
 ## Required skills
 
-- `grilling`
-- `amend-plan` when revising an existing feature folder
-
 Use `grilling` only when a human-owned decision is unresolved. If a required
 skill for the selected path is unavailable, stop and tell the user to make it
 available.

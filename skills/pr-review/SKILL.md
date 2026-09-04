@@ -77,16 +77,21 @@ reviewing.
 
 Invoke `code-review` with:
 
+- mode: `Deep`;
 - fixed point: target commit SHA;
 - review head: source commit SHA;
 - prepared snapshot: provider, acquisition details, commit list, changed files,
   and complete diff;
-- originating intent and linked artifacts; and
-- relevant repository guidance and surrounding source.
+- originating intent and linked artifacts;
+- relevant repository guidance and surrounding source; and
+- provider checks and validation status as evidence.
 
 Use the complete PR as one review scope. Do not divide it into feature sets.
-Let `code-review` run its code-quality, specification-fidelity, and skeptical
-risk reviewers and synthesize their findings.
+Let `code-review` choose a proportionate Deep profile: one combined reviewer
+when separate lenses would duplicate work, or independent code-quality,
+specification-fidelity, and skeptical-risk reviewers when production behavior
+gives them distinct contracts to inspect. Reviewers do not rerun formatting,
+builds, tests, linters, restoration, or provider checks.
 
 ## 4. Verify and deduplicate
 

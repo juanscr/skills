@@ -112,16 +112,24 @@ amendments.
 
 ## 3. Review the complete phase
 
-Run `code-review` over the complete phase diff before publication:
+After initial implementation and final validation, run exactly one Deep
+`code-review` over the complete phase diff:
 
+- mode: `Deep`;
 - fixed point: recorded phase starting SHA;
 - review head: current local HEAD;
 - originating intent: current approved plan plus amendments;
-- repository: live repository; and
-- complete phase commit list and diff.
+- repository: live repository;
+- complete phase commit list and diff; and
+- validation commands, results, and exclusions already produced by this
+  workflow.
 
-Keep the fixed point unchanged after fixes. Route genuine design ambiguity
-through `amend-plan`; do not resolve it silently.
+The reviewers consume validation evidence and do not run formatters, builds,
+tests, linters, restoration, or other CI gates.
+
+Keep the fixed point unchanged. Record the Deep-review head, stable finding IDs,
+retained findings, validation evidence, and review result in the Agent's log.
+Route genuine design ambiguity through `amend-plan`; do not resolve it silently.
 
 ## 4. Fix findings
 
@@ -133,13 +141,32 @@ Record a material improvement as follow-up instead of expanding the phase when
 it is outside the approved boundary or disproportionate to the concrete impact.
 Include the finding, rationale, and recommended owner in the Agent's log.
 
-Rerun `code-review` over the full starting-SHA-to-HEAD diff. Allow at most two
-fix-and-review passes after the initial review. Publish readiness requires zero
-blockers. If review uncovers evidence that changes an approved invariant, invoke
-`amend-plan`. If blockers remain after those passes or the same root issue
-survives two attempts without changing the approved plan, mark the phase
-blocked with kind `operational`, its evidence, owner, and exact resume
-condition. Stop rather than looping or misclassifying it as a plan amendment.
+After fixes, classify the delta since the recorded Deep-review head using the
+shared `code-review` invalidation rules:
+
+- use `Verify` when changes are confined to retained findings;
+- use `Light` when fixes add bounded directly coupled implementation while
+  preserving the approved design and risk boundaries; or
+- run a new `Deep` review only when the delta invalidates the recorded Deep
+  review.
+
+Verify mode receives the retained finding IDs, expected resolutions, resolution
+commits, original fixed point, Deep-review head, current head, and validation
+evidence. It verifies those findings and directly coupled blockers only.
+
+Light mode uses one combined reviewer and reports blockers or design decisions
+only. A changed `HEAD` by itself never requires another Deep review.
+
+After each fix round, classify the new delta again rather than defaulting to
+Verify. Allow at most two follow-up review rounds after the initial Deep review.
+Every blocker from the latest Deep, Light, or Verify result gates publication.
+If a blocker survives two fix attempts or blockers remain after the review
+budget without changing the approved plan, mark the phase blocked with kind
+`operational`, its evidence, owner, and exact resume condition.
+
+Publish readiness requires a recorded Deep review, zero open blockers, and
+every retained blocker verified resolved or superseded by an approved
+amendment.
 
 ## 5. Wait for publish approval
 
@@ -162,7 +189,8 @@ publication permission.
 On an explicit publish action:
 
 1. Reload the Agent's log and inspect branch, HEAD, and worktree.
-2. If reviewed state changed, rerun required validation and `code-review`.
+2. If reviewed state changed, rerun required validation and classify the delta
+   using the Verify, Light, and Deep invalidation rules in section 4.
 3. Invoke `pr-description` with the target, approved intent and amendments,
    reviewed diff, commits, validation, and linked artifacts. Use its output
    unchanged.
@@ -185,6 +213,7 @@ For feedback on an existing phase pull request:
 1. Retrieve the current approved feedback through the provider integration.
 2. Address only feedback within the current approved phase and amendments.
 3. Route changed design requirements through `amend-plan`.
-4. Follow `test-quality`, run validation, commit locally, and run `code-review`
-   over the complete phase diff.
+4. Follow `test-quality`, run validation, commit locally, and classify the
+   feedback delta using the Verify, Light, and Deep invalidation rules in
+   section 4.
 5. Wait for explicit approval before pushing follow-up commits.

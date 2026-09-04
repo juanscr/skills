@@ -1,5 +1,8 @@
 # Code Quality and Comments Reviewer
 
+Read and follow `review-contract.md`, including its no-validation and bounded
+context-traversal rules.
+
 Review the complete supplied change for design quality and comment quality.
 Report problems using the parent skill's finding contract. Do not modify code.
 

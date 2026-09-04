@@ -1,5 +1,8 @@
 # Specification Fidelity Reviewer
 
+Read and follow `review-contract.md`, including its no-validation and bounded
+context-traversal rules.
+
 Review the complete supplied change against its originating request, issue, or
 approved spec. Report problems using the parent skill's finding contract. Do
 not modify code.
