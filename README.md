@@ -21,7 +21,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 
 | Skill | Use it when |
 | --- | --- |
-| `/design-plan` | Start a complex feature with repository research, decision grilling, teaching-focused HTML specs, and explicit understanding gates. |
+| `/design-plan` | Start a complex feature with repository research, proportionate planning, explicit decisions, and an approved first phase. |
 | `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
@@ -31,18 +31,32 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 
 ## Expected flow
 
-1. Invoke `/design-plan` in the target repository. Approve the overall design
-   and each phase only after you can explain the design end to end.
+1. Invoke `/design-plan` in the target repository. Approve the overall
+   direction and the first executable phase. Later phases may remain outlines.
 2. Start a fresh session and invoke `/continue-plan` with the generated feature
-   folder. Ask it to implement the current phase.
-3. `execute-phase` delegates implementation with TDD reserved for substantial
-   feature phases, runs `code-review`, fixes retained findings, and stops with
+   folder. It recommends the next action and drafts an outline-only phase just
+   before implementation when needed.
+3. `execute-phase` implements with TDD reserved for substantial feature
+   behavior. Ordinary implementation choices remain with the agent; evidence
+   that changes an approved invariant routes through `amend-plan`. It then runs
+   `code-review`, fixes blockers and proportionate findings, and stops with
    reviewed local commits.
 4. Tell the agent to publish. `pr-description` follows the repository template,
    then the agent pushes the approved branch, creates the PR, and records its
    URL in execution progress.
 5. Use `/continue-plan` for phase feedback or to report that the PR merged.
    Continue with the next eligible phase.
+
+Plans are baselines, not frozen predictions. `amend-plan` records local
+adaptations, splits phases into stable subphases such as `1.1` and `1.2`, and
+updates focused decisions without regenerating the whole package. Only a change
+to the feature objective, overall architecture, or decomposition returns to a
+full `/design-plan`.
+
+Human-facing plans contain the problem, design, decisions, phases, and approval
+questions. `execution-progress.html` is the Agent's log for evidence, status,
+amendments, validation, commits, pull requests, blockers, and exact resume
+instructions.
 
 Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
 an existing PR; it always waits for approval before posting feedback.
@@ -53,6 +67,9 @@ needs triage, approved implementation, and provider replies.
 
 - `/grilling` stress-tests a plan, decision, or idea through decision-frontier
   questions.
+- `amend-plan` is invoked by planning and execution skills when evidence
+  requires a local adaptation, phase split, focused design amendment, or
+  blocked-phase resolution.
 - `/wait-what` asks the agent to re-explain its last response with more context
   and simpler language.
 - `/improve-codebase-architecture` creates one candidate spec per finding under

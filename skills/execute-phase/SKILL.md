@@ -1,163 +1,190 @@
 ---
 name: execute-phase
-description: Execute one approved feature phase with a proportionate implementation method, review and fix the complete phase diff, then wait for approval before publishing.
+description: Execute one approved feature phase with a proportionate implementation method, adapt through amend-plan when evidence changes the plan, review the complete phase diff, and wait for approval before publishing.
 ---
 
 # Execute Phase
 
-Execute exactly one approved phase. The main agent owns implementation, tests,
+Execute one current phase. The main agent owns implementation, tests,
 validation, review fixes, state, and handoff. Use sub-agents only when
 independent work benefits from parallel or isolated context.
 
 The initial endpoint is a validated, reviewed local branch with committed
-changes. Stop there and wait for the user to approve publishing the pull
-request.
+changes. Stop there unless the user explicitly requested publication.
 
 ## Required skills
 
+- `amend-plan`
 - `code-review`
 
-Use `test-quality` whenever tests are added or changed. Use `tdd` only for
-substantial feature work with multiple observable behaviors. If a skill is
-needed but unavailable, stop and tell the user to make it available.
+Use `test-quality` whenever tests change. Use `tdd` only for substantial feature
+work with multiple observable behaviors. If a required skill is unavailable,
+stop and tell the user to make it available.
 
 ## Inputs
 
 | Input | Required | Description |
 | --- | --- | --- |
 | Feature folder | Yes | Folder containing the approved plan artifacts. |
-| Phase spec | Yes | Current approved phase HTML file. |
-| Execution progress | Yes | `execution-progress.html` for the feature. |
-| Requested action | Yes | Implement/resume, address feedback, or publish the reviewed phase. |
+| Current phase | Yes | Approved spec, Brief inline spec, or outline-only phase. |
+| Agent's log | Yes | `execution-progress.html`. |
+| Requested action | Yes | Draft/implement/resume, address feedback, or publish. |
 
-Use the repository, branch strategy, target branch, validation, and
-pull-request strategy recorded in the approved artifacts. Do not select
-substitutes.
+Use recorded repository, branch, target, validation, and pull-request values.
+Implementation method and sub-agent use are execution decisions.
 
-## 1. Restore and validate state
+## 0. Restore and validate state
 
-Read the execution progress first, then the complete current phase spec. Read
-the overall plan only when the phase links to a cross-cutting decision that is
-not explained locally.
+Read the Agent's log first, then the current phase material. Read the overall
+plan only for linked cross-cutting decisions.
+
+For a log without schema version `2`, read and apply
+`../design-plan/references/legacy-normalization.md` before routing.
 
 Before changing anything:
 
-1. Confirm the requested phase is the current `not started` or `in progress`
-   phase. Do not execute a `blocked`, `review`, or later dependent phase.
-2. Confirm prerequisites and required approvals are complete.
+1. Confirm the phase is current or explicitly designated as the active
+   independent exception, executable rather than a split-phase container, and
+   has spec status `outline only`, `drafted`, or `approved`.
+2. An amendment-blocked phase is eligible when its linked amendment records an
+   approved resolution. An operationally blocked phase is eligible when its
+   recorded resume condition is satisfied. A `review` phase is eligible only
+   for feedback or publication, not new implementation.
 3. Inspect the live repository, branch, HEAD, remotes, and worktree.
-4. Compare live state with the execution record. Planning-time snippets are not
-   source truth.
-5. Refuse unrelated or unexplained worktree changes. Preserve recorded phase
-   work when resuming.
-6. Record the phase starting SHA as the immutable `code-review` fixed point.
-7. Confirm the approved source branch. If none is recorded or active, ask the
-   user instead of inventing a branch or changing branches silently.
+4. Compare live state with the Agent's log. Planning snippets are not source
+   truth.
+5. Identify unrelated worktree changes, determine whether they overlap this
+   phase, and preserve them. Ask the user only when overlap or ownership makes
+   proceeding unsafe.
+6. Confirm the approved source branch. Ask when none is recorded or active.
 
-If live code materially contradicts an approved design decision, mark the phase
-`blocked`, record the conflict and exact next action, and return to
-`design-plan`.
+When live evidence changes the plan, invoke `amend-plan`. Continue immediately
+after a clarification, local adaptation, or approved focused amendment. Stop
+only when `amend-plan` returns a human decision or re-plan.
 
-Before implementation, set the phase to `in progress` and record the starting
-SHA, branch, timestamp, and exact next action in `execution-progress.html`.
+## 1. Prepare the current phase
+
+When spec status is `outline only`, draft the current phase from:
+
+- the approved phase outline;
+- the validated live repository;
+- completed-phase results and amendments; and
+- the recorded planning mode and format.
+
+Keep the draft proportional and settle only what the current phase needs. Write
+the file, link it from the Agent's log, and set spec status to `drafted` before
+presenting it for approval. If the session stops, the next run presents this
+existing draft instead of recreating it.
+
+When spec status is `drafted`, present the existing draft and its unresolved
+questions. On explicit approval, set spec status to `approved`; stop unless the
+user also requested implementation. On rejection, preserve the draft, record
+the reason and exact revision action, keep it non-executable, and revise it only
+as requested before presenting it again. Do not implement an unapproved draft.
+
+For implementation, confirm prerequisites and required approvals. When
+transitioning from `not started`, record the current SHA as the immutable
+`code-review` fixed point. When resuming `in progress`, require and reuse its
+existing fixed point; if it is missing or invalid, record an operational
+blocker instead of deriving a new one. Then set or retain `in progress` with
+branch, timestamp, and exact next action.
 
 ## 2. Implement the phase
 
-Use TDD only for substantial feature work with multiple related observable
-behaviors. Implement refactoring, CI or build configuration, test-only work,
-documentation, narrow bug fixes, and other straightforward changes directly.
-For mixed work, use TDD only for the substantial feature behavior.
+Use TDD only for substantial feature behavior. Implement refactoring, CI or
+build configuration, test-only work, documentation, narrow fixes, and other
+straightforward changes directly. For mixed work, use TDD only for the
+substantial behavior.
 
-Read the relevant live code and implement only the approved phase. Follow
-`test-quality` for every added or changed test. Run targeted validation while
-working and the recorded final validation when the phase is complete.
+Read relevant live code and implement the approved outcome. Follow
+`test-quality` for changed tests. Run targeted validation while working and the
+recorded final validation when complete.
 
-Use sub-agents at the main agent's discretion for genuinely independent
-parallel work. The main agent remains responsible for integrating their work
-and for the complete phase outcome.
+Local implementation choices are available to the agent while the approved
+outcome, acceptance criteria, public contracts, validation, and phase boundary
+remain true. Record meaningful local adaptations through `amend-plan`; do not
+turn ordinary implementation choices into approval gates.
 
-Stop on a material design conflict rather than choosing new behavior. Otherwise
-complete the phase, commit it locally without pushing, and update execution
-progress with the changed paths, validation, commit SHA, and any approved
-deviation.
+When evidence crosses an approved invariant, invoke `amend-plan` and follow its
+classification. Otherwise complete the phase, commit locally without pushing,
+and update the Agent's log with changed paths, validation, commits, and
+amendments.
 
 ## 3. Review the complete phase
 
-An isolated `code-review` over the complete phase diff is required before every
-pull-request publication. Invoke it with:
+Run `code-review` over the complete phase diff before publication:
 
-- fixed point: the recorded phase starting SHA;
+- fixed point: recorded phase starting SHA;
 - review head: current local HEAD;
-- originating intent: the approved phase spec;
-- repository: the live repository; and
-- the complete phase commit list and diff.
+- originating intent: current approved plan plus amendments;
+- repository: live repository; and
+- complete phase commit list and diff.
 
-Do not replace the fixed point after review fixes. Every review covers the
-complete phase change from its original starting SHA.
-
-If review returns a material design decision, mark the phase `blocked`, record
-the decision needed, and wait for the user. Do not resolve it implicitly.
+Keep the fixed point unchanged after fixes. Route genuine design ambiguity
+through `amend-plan`; do not resolve it silently.
 
 ## 4. Fix findings
 
-Fix every retained blocker and material improvement within the approved phase.
-Add behavior-focused regression coverage where it is useful, run targeted and
+Fix every blocker and every proportionate material improvement that protects
+the approved phase outcome. Add useful regression coverage, run targeted and
 final validation, and create a new local commit without amending or pushing.
-Record the fixes and commit in execution progress.
 
-Run `code-review` again over the full starting-SHA-to-HEAD diff. Repeat the
-fix-and-review loop until no blocker or material improvement remains. If the
-same root issue survives two fix attempts, or reviewers produce a design
-conflict, mark the phase `blocked` and ask the user rather than looping
-indefinitely.
+Record a material improvement as follow-up instead of expanding the phase when
+it is outside the approved boundary or disproportionate to the concrete impact.
+Include the finding, rationale, and recommended owner in the Agent's log.
+
+Rerun `code-review` over the full starting-SHA-to-HEAD diff. Allow at most two
+fix-and-review passes after the initial review. Publish readiness requires zero
+blockers. If review uncovers evidence that changes an approved invariant, invoke
+`amend-plan`. If blockers remain after those passes or the same root issue
+survives two attempts without changing the approved plan, mark the phase
+blocked with kind `operational`, its evidence, owner, and exact resume
+condition. Stop rather than looping or misclassifying it as a plan amendment.
 
 ## 5. Wait for publish approval
 
-When implementation, final validation, and the final code review are clean:
+When implementation, validation, and final review are publishable:
 
-1. Keep the phase `in progress`; a phase enters `review` only after its pull
-   request exists.
-2. Record all local commit SHAs, changed paths, validation, final review result,
-   and any approved deviation.
-3. Set the exact next action to `Await user approval to push and create the pull
-   request`.
-4. Report the local branch, commit range, validation, and review signal.
-5. Stop.
+1. Keep the phase `in progress`; it enters `review` only after a pull request
+   exists.
+2. Record commits, changed paths, validation, final review signal, amendments,
+   and deferred follow-ups.
+3. Set the exact next action to await publication.
+4. Report the local branch, commit range, validation, review signal, and any
+   follow-ups.
+5. Stop unless the user explicitly requested publication in this action.
 
-Do not push, open a pull request, or post provider content until the user
-explicitly asks to publish.
+Do not push, open a pull request, or post provider content without explicit
+publication permission.
 
 ## 6. Publish the pull request
 
 On an explicit publish action:
 
-1. Reload execution progress and inspect the live branch, HEAD, worktree, and
-   final review record.
-2. If HEAD changed or the worktree is not clean, rerun required validation and
-   `code-review`; do not publish stale approval.
-3. Invoke `pr-description` with the target branch, originating intent, complete
-   reviewed diff, commit list, validation, and linked artifacts. Use its output
-   unchanged as the PR description.
+1. Reload the Agent's log and inspect branch, HEAD, and worktree.
+2. If reviewed state changed, rerun required validation and `code-review`.
+3. Invoke `pr-description` with the target, approved intent and amendments,
+   reviewed diff, commits, validation, and linked artifacts. Use its output
+   unchanged.
 4. Push only the recorded source branch.
-5. Create the pull request against the recorded target branch using the
-   provider's approved companion skill or integration. Invoke
-   `azure-devops-workflow` for Azure DevOps.
-6. Build the title from the observable outcome. Never expose internal planning
-   vocabulary in the title or description.
-7. Update the phase to `review` and record the PR URL, creation time, commits,
-   and exact next action in `execution-progress.html`.
-8. Preserve all earlier pull-request register entries.
-9. Stop and wait for review feedback or the user's merge report.
+5. Create the pull request against the recorded target using the provider's
+   approved integration. Invoke `azure-devops-workflow` for Azure DevOps.
+6. Build the title from the observable outcome, not planning vocabulary.
+7. Set the phase to `review` and record the PR URL, creation time, commits, and
+   exact next action.
+8. Preserve every earlier pull-request entry and wait for feedback or the
+   user's merge report.
 
-Never mark the phase `complete`. `continue-plan` does that only after the user
-reports that the pull request merged.
+Only `continue-plan` marks a phase complete after the user reports the pull
+request merged.
 
 ## Pull-request feedback
 
-When the requested action is to address feedback on an existing phase PR:
+For feedback on an existing phase pull request:
 
 1. Retrieve the current approved feedback through the provider integration.
-2. Address only that feedback within the current phase.
-3. Follow `test-quality` for test changes, run validation, commit locally, and
-   run `code-review` over the complete phase diff.
-4. Wait for explicit approval before pushing the follow-up commits.
+2. Address only feedback within the current approved phase and amendments.
+3. Route changed design requirements through `amend-plan`.
+4. Follow `test-quality`, run validation, commit locally, and run `code-review`
+   over the complete phase diff.
+5. Wait for explicit approval before pushing follow-up commits.

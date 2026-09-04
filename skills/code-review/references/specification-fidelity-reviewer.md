@@ -17,6 +17,7 @@ Look for:
 - important branches with no verification; and
 - stale specs or assumptions exposed by the live code.
 
-Distinguish an implementation defect from a material design conflict. Return a
-design conflict for user decision rather than silently resolving it.
-
+Distinguish an implementation defect from evidence that changes an approved
+invariant. For the latter, identify the affected outcome, acceptance criterion,
+public contract, validation requirement, or phase boundary so the calling
+workflow can classify it through `amend-plan`. Do not silently redesign.

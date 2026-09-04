@@ -8,8 +8,9 @@ description: Implement a substantial approved feature phase through behavior-foc
 Implement one substantial approved feature phase through repeated red -> green
 vertical slices. The phase spec defines the required behavior, acceptance
 criteria, public seams, and verification. The live repository defines the
-current code. Follow explicit repository guidance, but return a material
-conflict with the approved phase spec for user decision.
+current code. Follow explicit repository guidance. When live evidence changes
+an approved invariant, return the evidence to `execute-phase` for
+classification through `amend-plan`.
 
 This workflow is proportionate when the feature contains multiple related
 observable behaviors that benefit from incremental vertical slices. Use direct
@@ -23,7 +24,7 @@ Read the `test-quality` skill and both of its references before writing tests.
 
 | Input | Required | Description |
 | --- | --- | --- |
-| Phase spec | Yes | The approved phase HTML spec. |
+| Phase spec | Yes | The approved current-phase spec or Brief inline phase plan. |
 | Repository | Yes | The live repository to change. |
 | Validation | Yes | Existing targeted and final validation commands recorded for the phase. |
 
@@ -37,8 +38,9 @@ Before writing a test:
 4. Confirm that the phase spec settles the interface and test seam.
 
 Do not ask the user to reconfirm seams already approved in the phase spec. If a
-required seam is absent, ambiguous, or contradicted by live code, stop and
-return the exact design gap. Do not invent a new interface.
+required seam is absent, ambiguous, or contradicted by live code, return the
+exact evidence and affected invariant. `execute-phase` routes it through
+`amend-plan`; do not invent a new interface.
 
 ## What a good test is
 
@@ -97,7 +99,7 @@ Before returning:
 2. Run the phase's recorded final validation once.
 3. Map passing tests back to every acceptance criterion.
 4. Report the red and green evidence for each slice, changed paths, validation
-   results, and any deviation or unresolved design conflict.
+   results, and any evidence that requires plan amendment.
 
 The phase is not complete merely because tests pass. It must implement the
 approved observable behavior without unapproved scope.

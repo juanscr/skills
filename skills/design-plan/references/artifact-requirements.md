@@ -3,100 +3,152 @@
 The feature folder is the complete planning and continuation boundary. It must
 not depend on the original conversation.
 
-## Teaching standard
+## Proportional planning
 
-Assume the reader has no previous knowledge of the task or the relevant system.
-Use plain English, introduce concepts before relying on them, and connect facts
-into an explanation rather than presenting a sparse inventory.
+Choose the smallest mode that preserves the decisions and continuation context:
 
-Use the medium that teaches each idea most clearly: prose, diagrams, interface
-or object sketches, focused current-code evidence, tables, or examples. Include
-only the detail needed to understand and defend the design. Keep raw output and
-large supporting material out of the main narrative.
+| Mode | Use when | Human-facing artifacts |
+| --- | --- | --- |
+| **Brief** | One small phase with few decisions, such as configuration, tests, documentation, a narrow fix, or a small refactor. | One concise overall plan. Put phase implementation detail in the same file. |
+| **Standard** | A normal feature with multiple decisions or phases. | One concise overall plan and a detailed spec for the current phase only. |
+| **Deep** | High-risk architecture, migration, concurrency, security, or an explicit teaching request. | A teaching-focused overall plan and detailed current-phase spec. |
 
-## Overall plan: `index.html`
+Brief and Standard plans use Markdown unless diagrams or substantial navigation
+make HTML useful. Deep plans normally use HTML. The user may override the mode
+or format. Record the selected mode and format in the Agent's log.
 
-Teach the overall design through four areas:
+Write for the engineer who participated in the design and owns the repository.
+Explain reasoning, rejected alternatives, and constraints that cannot be
+recovered from the code. Cite facts the reader can look up instead of
+reproducing them. A path and focused claim are normally enough; add line ranges
+when stable and quote code only when its exact text makes the decision clearer.
 
-1. **Problem and objective** — explain the problem being tackled, why it
-   matters, the intended outcome, and important boundaries.
-2. **Overall architecture** — explain the resulting design at a high level.
-   Show the important interfaces, objects, ownership, and interactions without
-   turning the overview into an implementation specification.
-3. **Design decisions** — give each material decision that is not already clear
-   from the architecture its own subsection. Include the relevant evidence,
-   the decision, and enough reasoning to understand it. Use focused code or a
-   diagram when it makes the decision clearer.
-4. **Phases** — describe each phase's outcome, boundary, dependencies,
-   acceptance criteria, verification, and why that phase division is useful.
+## Audience boundary
 
-Place alternatives, cross-cutting concerns, open questions, and approval
-information beside the architecture or decision they affect. Do not create
-empty or repetitive sections merely to satisfy a template.
+Human-facing plan documents contain only what the user must understand, decide,
+defend, or approve:
 
-## Phase spec: `phase-<number>-<name>.html`
+- the problem and observable outcome;
+- the resulting architecture or approach;
+- material decisions, meaningful alternatives, and reasons;
+- phase outcomes, boundaries, dependencies, acceptance criteria, and
+  verification; and
+- open questions that require a human decision.
 
-Teach the phase through the same pattern as the overall plan, replacing its
-phase summary with the detail needed to implement and verify this slice:
+`execution-progress.html` is the **Agent's log**. It contains operational and
+historical detail: evidence citations, approvals, phase and spec status,
+amendments, superseded decisions, discoveries, changed paths, validation,
+commits, pull requests, blockers, and the exact next action. It is not a second
+human plan and is not intended to be read end to end.
 
-1. **Phase problem and objective** — explain what the phase accomplishes, why
-   it exists, where it fits in the completed feature, its boundaries and
-   prerequisites, and its observable outcome.
-2. **Architecture deep dive** — teach the relevant slice of the current and
-   proposed system in enough detail to implement safely. Explain the important
-   interfaces, objects, ownership, interactions, state, and behavior without
-   inventorying every symbol.
-3. **Design decisions** — give each material decision that is not obvious from
-   the architecture its own subsection. Include the relevant evidence, the
-   decision, and enough reasoning to understand it. Use focused code or a
-   diagram when it makes the decision clearer.
-4. **Implementation and verification** — explain the expected code changes and
-   a sensible dependency order, then state the acceptance criteria and how the
-   resulting behavior will be proved.
+The plan is the source of truth for the current approved design. The Agent's log
+is the source of truth for execution state and for how the design changed.
+Cross-link them instead of copying current decisions into both.
 
-Place alternatives, cross-cutting concerns, assumptions, open questions, and
-approval information beside the part of the phase they affect. Include enough
-file and symbol detail for implementation, but let the design determine what is
-material rather than filling out a mandatory inventory.
+## Overall plan: `index.<format>`
 
-Clearly label quoted repository code as **Current code** and design sketches as
-**Proposed code**. Snippets are explanatory evidence, not a frozen source of
-truth. Never invent omitted code.
+Cover only the areas that carry information for this change:
 
-## Continuation record: `execution-progress.html`
+1. **Problem and outcome** — what is changing, why it matters, important
+   boundaries, and what will be observable when it works.
+2. **Resulting design** — the important ownership, interfaces, objects, and
+   interactions at the level needed to understand the change.
+3. **Decisions** — each decision the user may need to defend or revisit,
+   including the meaningful alternative that lost and why.
+4. **Phase outline** — every phase's outcome, boundary, dependencies,
+   acceptance criteria, verification, and why the split is useful.
+
+Merge or omit sections when the design is small. Every heading must exist
+because the reader needs that decision. Later phases may retain explicit
+unknowns that do not block the overall direction or current phase.
+
+## Current phase spec: `phase-<number>-<name>.<format>`
+
+A separate phase spec exists only when its implementation detail would overload
+the overall plan. It covers:
+
+1. the phase's observable outcome, boundary, prerequisites, and acceptance
+   criteria;
+2. the current and proposed system slice needed to implement safely;
+3. decisions that belong specifically to this phase; and
+4. expected changes, dependency order, and verification.
+
+The current phase spec must be sufficient for a fresh implementation agent when
+read with the overall plan and Agent's log. It does not need to reteach
+cross-cutting material already linked from the overall plan.
+
+Label quoted repository code as **Current code**, proposed sketches as
+**Proposed code**, and retained earlier decisions as **Superseded**. Snippets
+are explanatory evidence, never frozen source truth.
+
+## Agent's log: `execution-progress.html`
 
 Include:
 
-1. Feature title, absolute repository path, expected target branch, spec format,
-   pull-request strategy, validation expectations, and links to all specs and
-   optional task artifacts.
-2. A phase table with number, name, status (`not started`, `in progress`,
-   `review`, `blocked`, or `complete`), assigned agent when known, and most
-   recent update.
+1. Schema version `2`, feature title, absolute repository path, target branch,
+   planning mode, spec format, pull-request strategy, validation expectations,
+   and links to plans and task artifacts.
+2. A phase table with stable number, name, kind (`executable`, `container`, or
+   `superseded`), phase status, spec status, assigned agent when known, and most
+   recent update. Container and superseded spec status is `not applicable`.
 3. A current-position section with the active or next phase, exact next action,
-   and prerequisites.
-4. Durable per-phase records for completed work, changed paths, validation,
-   decisions, deviations, blockers, commits, and pull requests.
-5. A handoff section with precise safe-continuation instructions and outstanding
-   approvals.
+   prerequisites, and current blocker or amendment when present.
+4. Durable per-phase records for changed paths, validation, discoveries,
+   amendments, commits, pull requests, and completion evidence.
+5. A handoff section with precise safe-continuation instructions and
+   outstanding approvals.
 6. A pull-request register that retains every PR's phase, identifier, URL,
    creation time, state, and merge status.
+7. One amendment log with amendment id, timestamp, phase, classification,
+   trigger, evidence, change, approval state, affected plan sections, and exact
+   next action. Approval state is `not required`, `pending`, `approved`, or
+   `rejected`. Record `not required` for clarifications and local adaptations;
+   record the user approver for approved or rejected phase splits and design
+   amendments.
+
+Phase status is `not started`, `in progress`, `blocked`, `review`, or `complete`.
+Spec status is `outline only`, `drafted`, or `approved`. A phase may be
+implemented only with an approved spec, including a Brief plan whose inline
+phase detail serves as that spec.
+
+Phase numbers never change. Splitting phase `N` creates `N.1`, `N.2`, and so on.
+The parent becomes a non-executable container and is ignored when choosing work.
+Compute its displayed status in this order: `complete` when all children are
+complete; otherwise `blocked` when any child is blocked; otherwise `review`
+when any child is in review; otherwise `in progress` when any child is in
+progress or complete; otherwise `not started`. Redistribute each acceptance
+criterion to exactly one child unless the plan explicitly identifies a shared
+criterion.
+
+When splitting an active phase, designate one active child and move the
+parent's complete execution record to it, including starting SHA, changed paths,
+commits, validation, amendments, pull-request register entries, and exact next
+action. Re-key existing pull-request entries to the designated child while
+preserving their history. The immutable review fixed point does not change. A
+phase with an existing pull request may be split only after the user explicitly
+approves how that pull request and its commits map to the children.
+
+Every blocked phase records a blocker kind:
+
+- an **amendment blocker** links to an amendment entry with the decision needed
+  and exact resume action; or
+- an **operational blocker** records the failure, evidence, exact resume
+  condition, and owner without pretending the plan changed.
+
+An amendment blocker resumes after its amendment records an approved resolution.
+An operational blocker resumes after its recorded condition is satisfied. Do
+not erase completed phase, blocker, or amendment history.
 
 The initial next action is always to invoke `continue-plan` and inspect the live
-repository before implementation. The continuation record points to design
-artifacts; it does not copy the repository or claim that planning-time snippets
-remain current.
-
-During execution, update this file before dispatch, after results, and whenever
-status or resume instructions change. A phase remains `review` until the user
-reports its PR merged. Do not erase completed phase history.
+repository before implementation. Update the Agent's log before dispatch, after
+results, and whenever state or resume instructions change.
 
 ## Optional task artifact
 
 Offer a task artifact only after phase boundaries are approved. Ask which
 provider to use and obtain explicit permission before creating it.
 
-Keep the task concise:
+Keep it concise:
 
 - state the observable outcome and phase list;
 - link the feature folder or accessible design artifacts;

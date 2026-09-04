@@ -1,146 +1,159 @@
 ---
 name: design-plan
-description: Create an approved, teaching-focused design package for a complex software change before AI implementation. Use only when the user explicitly invokes design-plan.
+description: Create an approved, proportionate design baseline and the first executable phase for a complex software change. Use only when the user explicitly invokes design-plan.
 disable-model-invocation: true
 ---
 
-Create a design package that gives the user enough understanding to explain and
-defend a software design before AI writes code. The result is not an
-implementation checklist. It is a self-contained teaching and continuation
-artifact grounded in the live repository.
-
-## Companion skills
-
-`continue-plan` and `execute-phase` are required after planning, not during it.
-Before declaring the design package ready, confirm that the user can make those
-skills available. If either is unavailable, explain the missing dependency and
-leave the package unready for execution.
+Create the smallest design package that lets the user defend the direction and
+lets a fresh agent begin the current phase safely. Planning establishes an
+amendable baseline, not a prediction of every implementation detail.
 
 ## Inputs
 
 | Input | Required | Default |
 | --- | --- | --- |
 | Task description | Yes | None |
-| Spec format | No | HTML |
+| Existing feature folder | No | None |
+| Planning mode | No | Standard |
+| Spec format | No | Markdown, or HTML when it earns its cost |
 | Spec root | No | `~/Documents/coding-specs` |
 
 Store specs at:
 
 `<spec-root>/<repository-name>/<kebab-case-feature-name>/`
 
-Allow the user to override the spec root, including choosing a directory inside
-the repository.
+Allow the user to override the planning mode, format, and spec root, including
+choosing a directory inside the repository.
+
+When revising an existing feature, use its folder. Preserve its Agent's log,
+completed phase history, amendment entries, and pull-request register. Mark
+replaced design text as superseded instead of erasing why it changed.
+
+## Required skills
+
+- `grilling`
+- `amend-plan` when revising an existing feature folder
+
+Use `grilling` only when a human-owned decision is unresolved. If a required
+skill for the selected path is unavailable, stop and tell the user to make it
+available.
 
 ## Non-negotiable rules
 
 1. Facts are the agent's responsibility. Decisions belong to the user.
-2. Ground material design claims in repository evidence or a recorded user
-   decision.
-3. A snippet in a spec teaches a decision; it is never the source of truth.
-4. Use plain English. Define a term before relying on it.
-5. Make each explanation decision-complete, not artifact-complete. Include all
-   evidence needed to understand one decision, but only the part of each
-   artifact that contributes to it.
-6. Approval is explicit. Silence, continued conversation, and document creation
-   are not approval.
+2. Ground design claims in repository evidence or a recorded user decision.
+3. The live repository is source truth. Plan snippets only explain decisions.
+4. Use plain English and the smallest artifact that carries the decision.
+5. Approval is an affirmative user statement naming the artifact or decision.
+   It remains valid until an amendment changes what was approved.
+6. Resolve every unknown that blocks the overall direction or current phase.
+   Record later-phase unknowns instead of guessing or resolving them early.
 7. Do not implement code or invoke `execute-phase` in this skill.
 
 Read and follow:
 
 - [Artifact requirements](references/artifact-requirements.md)
-- [HTML standard](references/html-standard.md)
+- [HTML standard](references/html-standard.md) when producing HTML
 
-## Workflow
+## 1. Establish the decision horizon
 
-### 1. Understand and plan the task
+Search the live repository for the evidence needed to understand the task.
+Separate facts from decisions. Use `grilling` only for the frontier of decisions
+that must be settled to approve the overall direction or current phase.
 
-This is a planning task. Search the live repository for the code and evidence
-needed for the task. Use `grilling` when a decision needs to be made from that
-evidence. If it is needed but unavailable, stop and tell the user to make that
-skill available.
+Choose Brief, Standard, or Deep using the artifact requirements. State the
+recommended mode, format, and expected artifacts before drafting; let the user
+override them.
 
-Create the feature folder once the repository and feature name are known.
-Before drafting the overall plan, confirm the design has no material undecided
-branches and obtain the user's explicit approval of the shared understanding.
+Create the feature folder once the repository and feature name are known, or
+reuse the supplied existing feature folder.
+Obtain explicit approval of the shared understanding when the overall direction
+and current decision horizon have no unresolved blocking decisions.
 
-### 2. Create and approve the overall plan
+## 2. Create and approve the overall plan
 
-Create `index.html` using the artifact and HTML references. Every feature,
-including a single-phase feature, gets an overview and at least one phase spec.
+Create `index.<format>`. It defines the current approved architecture and gives
+every phase an observable outcome, boundary, dependencies, acceptance criteria,
+and verification. Later phases remain outlines until they become current.
 
-Choose coherent, reviewable behavior slices. Each phase must have an observable
-outcome, acceptance criteria, and verification. Avoid infrastructure-only
-slices unless they are independently useful. Explain every dependency and why
-the phase should not be merged with or split from adjacent phases.
+Choose coherent, reviewable behavior slices. Avoid infrastructure-only slices
+unless independently useful. Explain why each dependency and phase boundary
+exists, while allowing a phase to split later when execution produces evidence.
 
-Delegate the design and writing of `index.html` to a Claude Opus sub-agent. Give
-it the approved design, repository evidence and source references, phase
-outline, and the artifact and HTML requirements. The sub-agent owns the
-teaching structure and presentation, not the software design. It must return
-specific questions instead of guessing when the supplied information is
-incomplete. Resolve those gaps through repository research or `grilling`, then
-resume the same sub-agent.
+For Deep mode, delegate drafting and presentation to a Claude Opus sub-agent.
+For Standard mode, delegate only when the design or presentation benefits from
+isolated context. Draft Brief mode directly. Give any drafting sub-agent the
+approved design, evidence, mode, format, and artifact requirements, including
+the audience boundary and proportionality requirement.
 
-The main agent remains responsible for factual accuracy, repository grounding,
-and presenting the result for user approval.
+The main agent owns factual accuracy and software design. Resolve specific gaps
+through repository research or focused `grilling`; do not expand the decision
+horizon merely because a later phase contains uncertainty.
 
-For approval, the user reviews the document and asks questions around it. This
-is done until the user explicitly approves.
+Present the overall plan for explicit approval. After phase boundaries are
+approved, optionally offer a concise GitHub issue or Azure DevOps work item.
+Ask for the provider and explicit permission before creating one.
 
-After phase boundaries are approved, ask whether the user wants a task artifact
-such as a GitHub issue or Azure DevOps work item. Ask for the provider and
-explicit permission before creating it. Keep it concise, link the design
-package, and do not duplicate the full plan.
+## 3. Create and approve the current phase
 
-### 3. Create and approve each phase
+For Brief mode, the overall plan may contain sufficient implementation detail
+and serve as the approved phase spec. Otherwise create
+`phase-<number>-<kebab-case-name>.<format>` for the first phase only.
 
-Create `phase-<number>-<kebab-case-name>.html` one phase at a time. Each phase
-must stand alone for a future implementation agent with no conversation
-history, while teaching the user how that part of the system works.
+Reread the relevant live paths immediately before drafting. The phase spec must
+settle the outcome, boundary, public contracts, acceptance criteria, and
+verification needed to implement safely. It may leave internal implementation
+choices to execution.
 
-Delegate its design and writing to a Claude Opus sub-agent. Give it the approved
-overall design, phase outcome and boundaries, relevant repository evidence and
-source references, and the artifact and HTML requirements. It must return
-specific questions instead of guessing when information is incomplete. Resolve
-those gaps through repository research or `grilling`, then resume the same
-sub-agent.
+Use the same delegation rule as the overall plan. Present the phase for explicit
+approval. Offer to draft later phases now only when the user wants that work or
+their contracts must be settled to make the current phase safe.
 
-The main agent remains responsible for factual accuracy, repository grounding,
-and presenting each phase for explicit user approval before moving to the next.
+Before the Agent's log exists, incorporate new evidence into the affected draft,
+mark approved text superseded when needed, and obtain approval for the changed
+decision. Once the Agent's log exists, later evidence is handled through
+`amend-plan`. Do not regenerate the whole package unless the feature objective
+or overall decomposition is invalid.
 
-Before drafting a phase, reread its relevant live paths. If repository drift
-invalidates an approved interface or decision, stop, explain the impact, use
-`grilling`, and obtain approval for the revised design. Update the affected
-design-time decision and revision logs.
-
-### 4. Set execution defaults
+## 4. Set execution defaults
 
 Execution proceeds one phase at a time. Use one pull request per phase unless
-the user proposes a different pull-request strategy.
+the user chooses another strategy.
 
-Before creating the continuation record, obtain and record:
+Before creating the Agent's log, obtain and record:
 
 - target branch;
 - required validation;
+- pull-request strategy; and
 - any external task artifact links.
 
-### 5. Create the continuation record
+Implementation method, sub-agent use, and review configuration belong to their
+owning execution and review skills; they are not planning blockers.
 
-After all required specs are approved, create `execution-progress.html`. The
-entire feature folder must be sufficient for a new agent to continue without
-the original conversation.
+## 5. Create the Agent's log
 
-Initialize every phase as `not started`. Set the exact next action to invoke
-`continue-plan` and reread the live code for the selected phase before any
-implementation. Do not copy a frozen repository description into the progress
-file.
+For a new feature folder, create `execution-progress.html` using the Agent's log
+requirements. Initialize every phase as `not started`. Mark the first phase spec
+`approved`; mark later phase specs `outline only` unless separately drafted and
+approved.
 
-Design-time decisions and review revisions belong in `index.html` or the
-relevant phase spec. During later execution, discoveries, approved deviations,
-changed paths, validation, and pull-request state belong to the active phase in
-`execution-progress.html`, cross-linked to amended design sections when needed.
+For an existing feature folder, update its Agent's log in place. Reconcile
+phases by stable identity, preserve every existing phase and spec status plus
+execution history, initialize only newly introduced phases, and require
+approval for every changed current-phase spec.
 
-### 6. End the design session
+Before reconciliation, apply `references/legacy-normalization.md` when the
+existing log has no schema version. Resolve and link the pending re-plan
+amendment, clear its blocker after the redesigned baseline is approved, mark
+removed phases as `superseded` non-executable history, select a valid current
+phase, and retain every earlier phase, amendment, commit, and pull-request
+record.
+
+Set the exact next action to invoke `continue-plan`, inspect the live repository,
+and execute or draft the selected phase as its spec status requires. The feature
+folder must be sufficient for a new agent without the original conversation.
+
+## 6. End the design session
 
 Do not begin implementation. Recommend a fresh session and give one concrete
 instruction containing the absolute feature-folder path:
