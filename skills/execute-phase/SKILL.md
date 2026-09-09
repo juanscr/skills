@@ -33,6 +33,23 @@ stop and tell the user to make it available.
 Use recorded repository, branch, target, validation, and pull-request values.
 Implementation method and sub-agent use are execution decisions.
 
+## Durable artifact boundary
+
+Phases are private execution scaffolding. Keep phase terminology and structure
+only in planning artifacts and the Agent's log.
+
+Write every repository-facing artifact in durable product and domain language.
+This includes source code, identifiers, APIs, schemas, configuration, tests,
+fixtures, comments, documentation, READMEs, changelogs, commit messages, pull
+request titles, and pull request descriptions. Translate the approved intent
+into observable behavior, architectural boundaries, or concrete future work;
+never copy or introduce phase names, numbers, labels, boundaries, sequencing,
+or other references to phases.
+
+Before committing or publishing, inspect the complete changed content and
+provider text. The boundary is satisfied only when no repository-facing
+artifact refers to phases or exposes the temporary execution structure.
+
 ## 0. Restore and validate state
 
 Read the Agent's log first, then the current phase material. Read the overall
@@ -98,7 +115,8 @@ substantial behavior.
 
 Read relevant live code and implement the approved outcome. Follow
 `test-quality` for changed tests. Run targeted validation while working and the
-recorded final validation when complete.
+recorded final validation when complete. Apply the durable artifact boundary to
+the complete changed content before committing.
 
 Local implementation choices are available to the agent while the approved
 outcome, acceptance criteria, public contracts, validation, and phase boundary
@@ -193,7 +211,7 @@ On an explicit publish action:
    using the Verify, Light, and Deep invalidation rules in section 4.
 3. Invoke `pr-description` with the target, approved intent and amendments,
    reviewed diff, commits, validation, and linked artifacts. Use its output
-   unchanged.
+   unchanged after confirming it satisfies the durable artifact boundary.
 4. Push only the recorded source branch.
 5. Create the pull request against the recorded target using the provider's
    approved integration. Invoke `azure-devops-workflow` for Azure DevOps.
