@@ -1,7 +1,7 @@
 # HTML Standard
 
-Use HTML only when diagrams, substantial navigation, or an explicitly requested
-presentation justify it. Otherwise use Markdown.
+Use the format selected by the artifact requirements. Apply this standard to
+every generated planning HTML file, including the Agent's log.
 
 Each HTML spec is one self-contained file that works without a build step,
 network connection, external stylesheet, font, image, script, or runtime
@@ -9,6 +9,11 @@ dependency.
 
 ## Required experience
 
+- Always use dark mode: declare `color-scheme: dark` and explicitly style dark
+  page and surface backgrounds with readable light text. Keep tables, code,
+  callouts, links, and SVG diagrams in the same palette. Dark mode must remain
+  active regardless of the operating-system theme; no light-mode default or
+  automatic light-theme switch.
 - Use semantic HTML with a clear heading hierarchy and landmarks.
 - Add a linked table of contents and stable anchors when the document is long
   enough to need them.
@@ -42,6 +47,8 @@ Before presenting a file:
 3. Confirm every code block is labelled current with a citation or proposed.
 4. Remove placeholders, invented source, stale claims, and presentation that
    does not help the reader make or understand a decision.
+5. Confirm dark backgrounds and legible foregrounds throughout, including code,
+   tables, and diagrams, even when the operating system uses light mode.
 
 The Agent's log is an operational record. Keep it well-formed, readable, and
 accurate, but do not apply teaching-document presentation work to it.

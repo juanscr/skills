@@ -14,7 +14,7 @@ amendable baseline, not a prediction of every implementation detail.
 | Task description | Yes | None |
 | Existing feature folder | No | None |
 | Planning mode | No | Standard |
-| Spec format | No | Markdown, or HTML when it earns its cost |
+| Spec format | No | HTML; Markdown for Brief mode |
 | Spec root | No | `~/Documents/coding-specs` |
 
 Store specs at:

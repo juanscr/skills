@@ -13,9 +13,11 @@ Choose the smallest mode that preserves the decisions and continuation context:
 | **Standard** | A normal feature with multiple decisions or phases. | One concise overall plan and a detailed spec for the current phase only. |
 | **Deep** | High-risk architecture, migration, concurrency, security, or an explicit teaching request. | A teaching-focused overall plan and detailed current-phase spec. |
 
-Brief and Standard plans use Markdown unless diagrams or substantial navigation
-make HTML useful. Deep plans normally use HTML. The user may override the mode
-or format. Record the selected mode and format in the Agent's log.
+Use HTML for Standard and Deep plans, including their current-phase specs.
+Brief plans default to Markdown. An explicit user format choice takes
+precedence in every mode. HTML does not need diagrams or substantial navigation
+to justify its use; keep the content proportionate to the selected mode.
+Record the selected mode and format in the Agent's log.
 
 Write for the engineer who participated in the design and owns the repository.
 Explain reasoning, rejected alternatives, and constraints that cannot be
