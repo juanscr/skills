@@ -1,7 +1,6 @@
 ---
 name: continue-plan
 description: Restore the current context of an existing feature plan and route the user's requested next action. Use only when the user explicitly asks to continue or resume a plan.
-disable-model-invocation: true
 ---
 
 # Continue Plan
@@ -16,8 +15,8 @@ confirmed action.
 - `execute-phase`
 
 If a required skill is unavailable, stop and tell the user to make it
-available. `design-plan` is a user-invoked re-plan destination, not a dependency
-for ordinary continuation.
+available. `design-plan` is an explicit-user-request re-plan destination, not a
+dependency for ordinary continuation.
 
 ## Input
 

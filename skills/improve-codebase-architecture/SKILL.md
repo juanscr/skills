@@ -1,7 +1,6 @@
 ---
 name: improve-codebase-architecture
 description: Scan a codebase for deepening opportunities and save each candidate as an architecture-improvement spec. Use only when the user explicitly invokes improve-codebase-architecture.
-disable-model-invocation: true
 ---
 
 # Improve Codebase Architecture

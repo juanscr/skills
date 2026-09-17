@@ -1,7 +1,6 @@
 ---
 name: design-plan
 description: Create an approved, proportionate design baseline and the first executable phase for a complex software change. Use only when the user explicitly invokes design-plan.
-disable-model-invocation: true
 ---
 
 Create the smallest design package that lets the user defend the direction and
