@@ -55,7 +55,9 @@ to the feature objective, overall architecture, or decomposition returns to a
 full `/design-plan`.
 
 Human-facing plans contain the problem, design, decisions, phases, and approval
-questions. `execution-progress.html` is the Agent's log for evidence, status,
+questions. Plans default to HTML; Brief mode defaults to Markdown, and an
+explicit format request overrides either default. All planning HTML uses dark
+mode. `execution-progress.html` is the Agent's log for evidence, status,
 amendments, validation, commits, pull requests, blockers, and exact resume
 instructions.
 
