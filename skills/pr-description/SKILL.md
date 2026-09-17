@@ -22,10 +22,30 @@ instructions.
 
 ## 1. Find the template
 
-Search the target branch and working tree for provider-supported PR templates,
-including conventional root, `.github`, `docs`, and `.azuredevops` locations.
-Search case-insensitively and inspect template directories, not only one
-hard-coded filename.
+Resolve the template before drafting any description:
+
+1. Identify the provider, repository default branch, PR target branch, and any
+   explicitly selected template.
+2. Enumerate template paths on the default branch, target branch, and working
+   tree. Include hidden directories and paths omitted by ignore rules; a
+   default file search can miss `.github`. Search case-insensitively in root,
+   `.github`, `docs`, and `.azuredevops`, including template directories rather
+   than only one hard-coded filename. Use Git tree listings or the provider API
+   when the checkout is sparse or a branch is unavailable locally.
+3. Resolve provider-specific sources and selection rules. GitHub templates are
+   supplied from the default branch; check the owner's public `.github`
+   repository for an applicable inherited template when the repository has
+   none. Azure DevOps templates also live on the default branch; resolve the
+   target-branch-specific template before the default template.
+4. Read the selected template in full. Record its repository, ref, and path,
+   plus why it applies. Treat a working-tree or target-branch variant as a
+   candidate, not an automatic override of provider selection.
+
+An unreadable source, failed lookup, or incomplete search is **blocked**, not
+evidence that no template exists. Report what could not be checked and resolve
+it before drafting. Only a completed search with no applicable template permits
+the [no-template fallback](references/no-template-fallback.md); read that
+reference only after recording the checked sources and their results.
 
 When a template exists, it is the output contract:
 
@@ -39,26 +59,11 @@ When a template exists, it is the output contract:
 Do not add a competing structure. If several templates could apply and no
 provider rule or request selects one, ask the user which template to use.
 
-When no template exists, use only these sections:
-
-```markdown
-## Why
-
-## What changed
-
-## Architecture
-
-## Validation
-
-## Future work
-```
-
-Omit an empty `Future work` section. Omit another fallback section only when it
-has no truthful content.
-
 ## 2. Write the narrative
 
-Keep the description simple and reviewer-oriented.
+Keep the description simple and reviewer-oriented. The topics below guide
+content within the selected template's fields; they are not replacement
+headings. Fit relevant intent, architecture, and validation into that structure.
 
 ### Intent
 
@@ -98,7 +103,8 @@ deliberately outside this PR. Do not manufacture future work to fill a section.
 
 Before returning the description, confirm:
 
-1. It follows the selected template exactly.
+1. Its headings, ordering, checklists, and required comments match the template
+   read in step 1, or the recorded search establishes fallback eligibility.
 2. A reviewer can understand the intention before the implementation details.
 3. Architectural decisions are high-level and grounded in the actual change.
 4. References to source are orienting, not a code walkthrough.
@@ -109,5 +115,6 @@ Before returning the description, confirm:
    mechanics.
 8. The prose is concise and contains no generated-summary filler.
 
-Return the selected template path and the final description.
-
+Return the template repository, ref, and path (or the no-template search
+evidence) separately from the final description. Keep this discovery metadata
+out of the PR body.
