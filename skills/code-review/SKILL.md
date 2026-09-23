@@ -62,6 +62,11 @@ Verify additionally requires every retained finding and its expected resolution.
 
 ## 2. Dispatch by mode
 
+Invoke `model-selection` for every reviewer in every mode, including combined
+Deep review. This skill chooses reviewer roles and count; `model-selection`
+owns model, reasoning effort, and context tier. If unavailable, stop before
+dispatch.
+
 ### Deep
 
 Choose the reviewer profile before dispatch.
@@ -72,15 +77,13 @@ another cohesive change where separate lenses would traverse substantially the
 same evidence. File extension alone does not decide the profile; classify by
 the behavior and contracts the changed artifact controls.
 
-Launch one `general-purpose` reviewer using `gpt-5.6-terra` at high effort.
+Launch one `general-purpose` reviewer.
 Give it the absolute paths to `review-contract.md`, `combined-reviewer.md`, and
 the `test-quality` references when tests changed. Apply the leaf reviewer
 boundary above.
 
 Use three independent reviewers when the change modifies production behavior
 and the lenses have materially different contracts or call paths to inspect:
-
-Call model-selection to know which agents to use.
 
 Launch all three in parallel. Each receives:
 
@@ -96,7 +99,7 @@ Launch all three in parallel. Each receives:
 
 ### Light
 
-Launch one `general-purpose` reviewer. Call model-selection for model picking.
+Launch one `general-purpose` reviewer.
 Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
 delta since the Deep-review head, originating intent, validation evidence, and
 relevant directly coupled source. Apply the leaf reviewer boundary above.
@@ -106,7 +109,7 @@ If the delta meets a Deep invalidation condition, stop and return
 
 ### Verify
 
-Launch one `general-purpose` reviewer. Check model-selection to pick the model.
+Launch one `general-purpose` reviewer.
 Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
 since the reviewed head, retained findings, resolution commits, originating
 intent, validation evidence, and directly coupled source. Apply the leaf

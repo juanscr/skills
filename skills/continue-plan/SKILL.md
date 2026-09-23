@@ -1,13 +1,16 @@
 ---
 name: continue-plan
-description: Restore the current context of an existing feature plan and route the user's requested next action. Use only when the user explicitly asks to continue or resume a plan.
+description: Restore feature coordination when the user asks to continue a plan or design-plan hands off an approved phase.
 ---
 
 # Continue Plan
 
-Restore enough context to continue an existing feature safely. Load the current
-position, recommend the next action, and act only on the user's requested or
-confirmed action.
+Act as the feature coordinator. Restore the current position and route the
+requested action; a `design-plan` handoff supplies an explicit implementation
+action. A fresh session resumes the coordinator role, not a new execution tree.
+
+The coordinator is the sole writer of shared plan artifacts and the Agent's
+log. Phase workers return results and amendment evidence through `execute-phase`.
 
 ## Required skills
 
@@ -26,16 +29,18 @@ Accept either:
 - a feature name to find under `~/Documents/coding-specs`.
 
 Prefer an explicit folder path. When searching by name, require the folder to
-contain `execution-progress.html`. If multiple folders match, ask the user to
-choose. If none match, state that the feature needs a `design-plan` handoff.
+contain `execution-progress.json` or a legacy `execution-progress.html`. If
+multiple folders match, ask the user to choose. If none match, state that the
+feature needs a `design-plan` handoff.
 
 ## Load order
 
-1. Read `execution-progress.html` first. It is the Agent's log and source of
-   truth for workflow state, approvals, amendments, pull requests, blockers,
-   and the exact next action.
-   For a log without schema version `2`, read and apply
+1. Load `execution-progress.json` first, using the Agent's log requirements in
+   `../design-plan/references/artifact-requirements.md`. If only a legacy log
+   exists or the schema is not `3`, apply
    `../design-plan/references/legacy-normalization.md` before routing.
+   Load metadata, coordinator, current position, and the selected phase record;
+   retrieve historical records only when relevant.
 2. Read the linked overall plan for the feature goal, current approved design,
    decisions, and phase boundaries.
 3. Identify the current phase:
@@ -52,18 +57,30 @@ choose. If none match, state that the feature needs a `design-plan` handoff.
 Do not eagerly read later phase specs. The plans explain approved decisions;
 the live repository remains source truth for code.
 
+For a coordinator replacement, reconcile the recorded owner and workers before
+claiming ownership. A `handoff-ready` checkpoint transfers coordination, not
+new approval. If the previous coordinator or a worker may still be writing,
+settle ownership before dispatch or shared-artifact edits.
+
 ## Resume behavior
 
-When the user did not request an action, report the feature, current phase and
-status, blocker or exact next action, relevant pull request, and one recommended
-next action. Wait for confirmation or redirection.
+When neither the user nor a `design-plan` handoff supplied an action, report the
+feature, current phase and status, blocker or exact next action, relevant pull
+request, and one recommended next action. Wait for confirmation or redirection.
 
-When the user included an action, restore context and route only that action:
+**Resume the recorded action** means reconcile live state, claim coordination,
+and follow `current.action` within its recorded approval scope. A pending
+decision, publication approval, or merge report remains a stop, not permission
+to proceed. Set `coordinator` to the new owner, `active`, and the current
+timestamp while preserving handoff history.
 
-- implementation, iteration, validation, phase drafting, phase-spec review,
-  explicit approval or rejection of a draft, or pull-request feedback: invoke
-  `execute-phase` with the feature folder, current phase outline or spec,
-  Agent's log, and the user's exact requested action;
+When an action was supplied, restore context and route only that action:
+
+- implementation, iteration, validation, code review, publication, phase
+  drafting, phase-spec review, explicit approval or rejection of a draft, or
+  pull-request feedback: invoke `execute-phase` with the feature folder,
+  current phase outline or spec, Agent's log, supplied action, and recorded
+  approval scope;
 - new execution evidence, a phase split, a focused design change, or a decision
   resolving an amendment blocker: invoke `amend-plan`, update current position,
   and resume `execute-phase` when the amendment permits it;
@@ -78,7 +95,14 @@ When the user included an action, restore context and route only that action:
   eligible phase, recompute every ancestor container status using the artifact
   requirements, and set the exact next action according to spec status;
 - a context question: answer from the loaded artifacts and live repository
-  without dispatching implementation.
+  without dispatching implementation;
+- a request to replace the coordinator or clear the session: invoke
+  `plan-handoff` and stop after its checkpoint.
+
+Keep control in the coordinator when invoking these workflows; `execute-phase`
+delegates bounded work rather than launching another coordinator. If every
+phase is complete, set coordinator status to `complete` and report completion
+without dispatching a worker.
 
 A current `in progress` or `review` phase retains priority. An amendment blocker
 resumes when its linked amendment records an approved resolution. An operational

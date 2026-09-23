@@ -72,13 +72,13 @@ as a confidence limit; do not block analysis solely because it is absent.
 Verify each comment against the pinned diff, current source, tests, and intent.
 Assign one category:
 
-- **Material fixes**: any fix that is relevant and improves the pull request
-  on any value (readability, security, test quality or more).
-- **Conflicting**: it conflicts with the spec but the reviewer is raising a
-  valid point. A conflict does not necessiraly mean it should not be fixed, as
-  we may need to revaluate an assumption.
-- **No-Go:** Feedback that was already decided upon and that is repeated,
-  brings no additional context or it does not improve the spec in any way.
+- **Material fixes:** correct, in-scope feedback with a concrete benefit to the
+  pull request, including readability, security, or test quality.
+- **Conflicting:** a valid concern that requires revisiting approved intent.
+  Present the tradeoff and proposed decision rather than rejecting it merely
+  because it conflicts with the spec.
+- **No-Go:** incorrect or already satisfied feedback, a repeated decision with
+  no new evidence, or a suggestion without a concrete benefit.
 
 Assess the substance rather than the commenter's wording or authority.
 Deduplicate comments with the same root cause, but preserve every provider
@@ -95,7 +95,7 @@ Present:
 **Pull request:** <URL>
 **Snapshot:** `<head SHA>`
 **Intent source:** <spec, linked artifact, or best-attempt basis>
-**Signal:** <must-fix count> Must fix, <good-to-have count> Good to have, <no-go count> No-Go
+**Signal:** <material-fix count> Material fixes, <conflicting count> Conflicting, <no-go count> No-Go
 
 ### Material fixes
 | ID | Comment | Evidence | Why it matters |
@@ -118,7 +118,14 @@ overridden. State explicitly that approval authorizes the selected code
 changes, tests, commit, push to the pull request's existing source branch, and
 replies to every analyzed active comment. Then stop.
 
-## 5. Implement with the right test boundary
+## 5. Revalidate approval
+
+Refresh the PR head and active feedback after approval. Continue only when the
+approved comments, their content and disposition, and relevant code still match
+the presented snapshot. Present affected changes for renewed approval when the
+head, feedback, or scope changed; feedback can change without a new commit.
+
+## 6. Implement with the right test boundary
 
 For each approved change, choose a proportionate method:
 
@@ -155,11 +162,13 @@ When `human-voice` returns reply text, post it separately to that comment:
 
 - for an implemented comment that needs context, state only the useful context
   not already clear from the diff;
-- for a unselected comment, state the evidence-backed reason it was not changed
+- for an unselected comment, state the evidence-backed reason it was not changed
   without sounding defensive; and
 - for duplicate comments, answer the specific commenter and reference the
   shared fix rather than posting a generic duplicate response.
 
-Post through the selected provider integration. Resolve a thread only after its
-approved fix is pushed, verified, and directly answers the thread. Comments
-that where rejected mark them as Won't Fix or close them.
+Post through the selected provider integration. Resolve implemented feedback
+only after its approved fix is pushed, verified, and directly answers the
+thread. For user-rejected feedback, post the reason and mark it Won't Fix or
+resolve it using the provider's supported disposition. Leave unselected,
+partially addressed, and decision-seeking threads open.

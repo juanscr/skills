@@ -9,17 +9,23 @@ Change the smallest owning part of an approved plan, preserve its history, and
 return an exact safe resume action. Approval makes a plan amendable, not
 immutable.
 
+The feature coordinator runs this skill and writes the shared artifacts.
+Phase workers return evidence to it and wait when an approved invariant would
+change.
+
 ## Inputs
 
 | Input | Required | Description |
 | --- | --- | --- |
 | Feature folder | Yes | Folder containing the overall plan and Agent's log. |
-| Agent's log | Yes | `execution-progress.html`. |
+| Agent's log | Yes | `execution-progress.json`. |
 | Current phase | Yes | Phase number, outline, and spec when one exists. |
 | Evidence | Yes | Live repository fact, review finding, or user decision that triggered the amendment. |
 
-Read the Agent's log first, then the affected plan sections and live repository
-paths. Do not reread or rewrite unaffected phase specs.
+Read the Agent's log first; migrate a legacy log through
+`../design-plan/references/legacy-normalization.md` before changing it. Then
+read the affected plan sections and live repository paths. Do not reread or
+rewrite unaffected phase specs.
 
 Follow the amendment and subphase artifact rules in
 `../design-plan/references/artifact-requirements.md`.

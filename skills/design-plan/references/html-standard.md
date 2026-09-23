@@ -1,7 +1,7 @@
 # HTML Standard
 
 Use the format selected by the artifact requirements. Apply this standard to
-every generated planning HTML file, including the Agent's log.
+human-facing HTML plans only. The JSON Agent's log has no presentation layer.
 
 Each HTML spec is one self-contained file that works without a build step,
 network connection, external stylesheet, font, image, script, or runtime
@@ -30,11 +30,11 @@ they clarify a decision. Give every visual a plain-English explanation. Use real
 names for repository code and clearly label proposed names. Do not use Mermaid
 or external assets.
 
-When an inline SVG materially clarifies the design, the main agent may launch
-one `general-purpose` agent using `claude-sonnet-5` at medium effort solely to
+When an inline SVG materially clarifies the design, the coordinator may invoke
+`model-selection` and launch one `general-purpose` visual worker solely to
 create the SVG fragment. Supply the finalized diagram content, labels,
 relationships, placement constraints, and accessibility requirements. The
-sub-agent returns only the self-contained SVG markup; the main agent integrates
+worker returns only the self-contained SVG markup; the coordinator integrates
 it into the document and remains responsible for its factual accuracy.
 
 ## Quality gate
@@ -49,6 +49,3 @@ Before presenting a file:
    does not help the reader make or understand a decision.
 5. Confirm dark backgrounds and legible foregrounds throughout, including code,
    tables, and diagrams, even when the operating system uses light mode.
-
-The Agent's log is an operational record. Keep it well-formed, readable, and
-accurate, but do not apply teaching-document presentation work to it.

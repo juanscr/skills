@@ -1,23 +1,26 @@
 ---
 name: model-selection
-description: Select the proper model when delegating work to a child agent.
+description: Select the model, reasoning effort, and context tier when delegating work to a child agent or child worktree.
 ---
 
-Prefer GPT models over Claude ones. Use GPT-6 Sol (High / Large context) for
-most work, only use GPT-6 Luna models when the task is direct and no thinking
-is required; if Luna is needed, use max reasoning and large context windows.
-GPT-6 Astra should be used for research, solving big complex tasks, or
-orchestrating agents.
+Honor an explicit model choice for the current task. Otherwise select by the
+delegated work, not its file extension or the review mode's name:
 
-When reviewing code:
-1. GPT-6 Luna for reviewing simple things.
-2. GPT-6 Sol the default for reviewing code.
-3. GPT-6 Astra for skeptical or risky reviews.
+| Work | Model ID | Reasoning | Context tier |
+| --- | --- | --- | --- |
+| Most implementation and ordinary code review | `gpt-6-sol` | `high` | `long_context` |
+| Bounded, low-risk execution or simple review with settled requirements | `gpt-6-luna` | `max` | `long_context` |
+| Research, orchestration, complex design, skeptical or high-risk review | `gpt-6-astra` | `high` | `long_context` |
+| Visual implementation or visual-only review of HTML, CSS, SVG, or other presentation artifacts from settled requirements | `claude-opus-5.5` | `medium` | Runtime default |
 
-Claude models are only approved for:
-1. Creating visual artifacts in HTML (SVG, images, etc).
-2. Reviewing / executing tasks that are pure frontend or HTML, as they have
-   better visual artifact creation.
+Risk and complexity take precedence over apparent simplicity. Use Astra for a
+skeptical-risk reviewer even when the diff is small. A Light or Verify review
+uses Luna only when its actual scope meets the low-risk criterion.
 
-For those cases, use Claude 5.5 Opus on medium reasoning. Don't delegate
-thinking to these models, only pure execution.
+The Claude exception is presentation work, not all frontend work. Keep
+architecture, application behavior, data flow, and unresolved design decisions
+with GPT; give visual workers the settled content and constraints.
+
+Apply the selected settings to the child dispatch. Selecting a model does not
+change the current coordinator's model. If the model or a requested setting is
+unavailable, report the limitation and ask before substituting.

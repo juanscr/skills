@@ -1,6 +1,6 @@
 ---
 name: design-plan
-description: Create an approved, proportionate design baseline and the first executable phase for a complex software change. Use only when the user explicitly invokes design-plan.
+description: Create an approved design baseline and first executable phase, then coordinate child execution. Use only when the user explicitly invokes design-plan.
 ---
 
 Create the smallest design package that lets the user defend the direction and
@@ -24,6 +24,10 @@ Store specs at:
 Allow the user to override the planning mode, format, and spec root, including
 choosing a directory inside the repository.
 
+The format choice applies to human-facing plans. The Agent's log is always
+`execution-progress.json`. Before revising an existing feature, migrate a
+legacy log through `references/legacy-normalization.md`.
+
 When revising an existing feature, use its folder. Preserve its Agent's log,
 completed phase history, amendment entries, and pull-request register. Mark
 replaced design text as superseded instead of erasing why it changed.
@@ -44,7 +48,8 @@ available.
    It remains valid until an amendment changes what was approved.
 6. Resolve every unknown that blocks the overall direction or current phase.
    Record later-phase unknowns instead of guessing or resolving them early.
-7. Do not implement code or invoke `execute-phase` in this skill.
+7. Keep repository implementation in phase workers. Start execution only after
+   the overall plan and current phase are approved and the Agent's log exists.
 
 Read and follow:
 
@@ -76,12 +81,12 @@ Choose coherent, reviewable behavior slices. Avoid infrastructure-only slices
 unless independently useful. Explain why each dependency and phase boundary
 exists, while allowing a phase to split later when execution produces evidence.
 
-Draft and present every planning mode with the main agent so repository
+Draft and present every planning mode with the coordinator so repository
 evidence, decisions, and document context remain continuous. When an HTML
 diagram earns its place, use only the bounded SVG delegation defined by the
 HTML standard.
 
-The main agent owns factual accuracy and software design. Resolve specific gaps
+The coordinator owns factual accuracy and software design. Resolve specific gaps
 through repository research or focused `grilling`; do not expand the decision
 horizon merely because a later phase contains uncertainty.
 
@@ -122,12 +127,12 @@ Before creating the Agent's log, obtain and record:
 - pull-request strategy; and
 - any external task artifact links.
 
-Implementation method, sub-agent use, and review configuration belong to their
-owning execution and review skills; they are not planning blockers.
+Worker dispatch, implementation method, and review configuration belong to
+their owning execution and review skills; they are not planning blockers.
 
 ## 5. Create the Agent's log
 
-For a new feature folder, create `execution-progress.html` using the Agent's log
+For a new feature folder, create `execution-progress.json` using the Agent's log
 requirements. Initialize every phase as `not started`. Mark the first phase spec
 `approved`; mark later phase specs `outline only` unless separately drafted and
 approved.
@@ -137,22 +142,24 @@ phases by stable identity, preserve every existing phase and spec status plus
 execution history, initialize only newly introduced phases, and require
 approval for every changed current-phase spec.
 
-Before reconciliation, apply `references/legacy-normalization.md` when the
-existing log has no schema version. Resolve and link the pending re-plan
-amendment, clear its blocker after the redesigned baseline is approved, mark
-removed phases as `superseded` non-executable history, select a valid current
-phase, and retain every earlier phase, amendment, commit, and pull-request
-record.
+Resolve and link the pending re-plan amendment, clear its blocker after the
+redesigned baseline is approved, mark removed phases as `superseded`
+non-executable history, select a valid current phase, and retain every earlier
+phase, amendment, commit, and pull-request record.
 
-Set the exact next action to invoke `continue-plan`, inspect the live repository,
-and execute or draft the selected phase as its spec status requires. The feature
-folder must be sufficient for a new agent without the original conversation.
+Set `current.action` to execute or draft the selected phase as its spec status
+requires. The feature folder must be sufficient for a new agent without the
+original conversation.
 
-## 6. End the design session
+## 6. Continue as coordinator
 
-Do not begin implementation yourself. Dispatch a child worktree with:
+Remain the feature coordinator. Invoke `continue-plan` with the absolute
+feature-folder path and the explicit action **implement the approved current
+phase**. A folder-only handoff requests status, not execution.
 
-`/continue-plan for <absolute-feature-folder-path>.`
+`execute-phase` owns worker dispatch and result collection. Keep coordination
+in this session; pause for required decisions, publication permission, and the
+user's merge report. When every phase is complete, end coordination.
 
-Call model-selection to pick the right model to dispatch the child worktree.
-You are now the orchestrator agent to babysit until the plan is finished.
+When the user wants to replace the coordinator or clear its context, invoke
+`plan-handoff` instead of starting another coordinator alongside this one.

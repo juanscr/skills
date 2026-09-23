@@ -37,7 +37,7 @@ defend, or approve:
   verification; and
 - open questions that require a human decision.
 
-`execution-progress.html` is the **Agent's log**. It contains operational and
+`execution-progress.json` is the **Agent's log**. It contains operational and
 historical detail: evidence citations, approvals, phase and spec status,
 amendments, superseded decisions, discoveries, changed paths, validation,
 commits, pull requests, blockers, and the exact next action. It is not a second
@@ -46,6 +46,9 @@ human plan and is not intended to be read end to end.
 The plan is the source of truth for the current approved design. The Agent's log
 is the source of truth for execution state and for how the design changed.
 Cross-link them instead of copying current decisions into both.
+
+The coordinator is the sole writer of the feature folder. Workers return
+execution results and proposed amendments; the coordinator incorporates them.
 
 ## Overall plan: `index.<format>`
 
@@ -83,30 +86,47 @@ Label quoted repository code as **Current code**, proposed sketches as
 **Proposed code**, and retained earlier decisions as **Superseded**. Snippets
 are explanatory evidence, never frozen source truth.
 
-## Agent's log: `execution-progress.html`
+## Agent's log: `execution-progress.json`
 
-Include:
+Use valid JSON with `schemaVersion: 3`, concise values, and no presentation
+markup. Keep evidence once and reference it by ID or path. Omit unused optional
+fields, not historical records. Read metadata and the active phase first; query
+historical entries only when needed instead of dumping the full log into context.
 
-1. Schema version `2`, feature title, absolute repository path, target branch,
-   planning mode, spec format, pull-request strategy, validation expectations,
-   and links to plans and task artifacts.
-2. A phase table with stable number, name, kind (`executable`, `container`, or
-   `superseded`), phase status, spec status, assigned agent when known, and most
-   recent update. Container and superseded spec status is `not applicable`.
-3. A current-position section with the active or next phase, exact next action,
-   prerequisites, and current blocker or amendment when present.
-4. Durable per-phase records for changed paths, validation, discoveries,
-   amendments, commits, pull requests, and completion evidence.
-5. A handoff section with precise safe-continuation instructions and
-   outstanding approvals.
-6. A pull-request register that retains every PR's phase, identifier, URL,
-   creation time, state, and merge status.
-7. One amendment log with amendment id, timestamp, phase, classification,
-   trigger, evidence, change, approval state, affected plan sections, and exact
-   next action. Approval state is `not required`, `pending`, `approved`, or
-   `rejected`. Record `not required` for clarifications and local adaptations;
-   record the user approver for approved or rejected phase splits and design
-   amendments.
+Use these top-level keys:
+
+| Key | Contents |
+| --- | --- |
+| `schemaVersion` | `3` |
+| `feature`, `repository`, `targetBranch` | Feature title, absolute repository path, and target branch. |
+| `planningMode`, `specFormat`, `prStrategy` | Human-plan mode and format, and publication strategy. |
+| `plan`, `tasks`, `validation` | Overall-plan path, external task links, and required validation commands. |
+| `approvals` | Feature-wide decisions and their scope, approval state, approver, and timestamp; pending decisions include the exact question. |
+| `coordinator` | Current `id`, `status` (`active`, `handoff-ready`, or `complete`), and `updatedAt`. Use the session identifier when available. |
+| `current` | `phase`, exact `action`, prerequisites, and blocker or amendment ID when present. |
+| `phases` | Phase records described below, keyed by stable string IDs such as `"1"` or `"1.1"`. |
+| `amendments` | Amendment history with stable IDs and preserved prior decisions. |
+| `pullRequests` | PR register retaining phase, provider ID, URL, creation time, state, and user-reported merge status. |
+| `handoffs` | Transfer history: outgoing coordinator, timestamp, reason, and relevant context not already recorded elsewhere. |
+| `legacySource` | Optional path to the preserved pre-migration log; never a second writable source. |
+
+Each phase has `name`, `kind` (`executable`, `container`, or `superseded`),
+`status`, `specStatus`, `spec` when present, and `updatedAt`. Container and
+superseded spec status is `not applicable`.
+
+Add execution fields as they become known: `sourceBranch`, `startingSha`,
+`worker` (identifier, status, absolute worktree, assignment, and last returned
+HEAD), `changedPaths`, `validation`, `commits`, `discoveries`, `adaptations`,
+`blocker`, and `completionEvidence`. Preserve `review` with the Deep-review
+head, retained finding IDs, dispositions, and follow-up rounds used. Record
+`approvals` with the decision, scope, state, approver, and timestamp; pending
+approvals include the exact question. Uncommitted work and interrupted commands
+belong with the worker record, not an invented successful result.
+
+Each amendment retains ID, timestamp, phase, classification, trigger, evidence,
+change, approval state, affected plan sections, and resume action. Approval
+state is `not required`, `pending`, `approved`, or `rejected`; include the
+approver when approved or rejected.
 
 Phase status is `not started`, `in progress`, `blocked`, `review`, or `complete`.
 Spec status is `outline only`, `drafted`, or `approved`. A phase may be
@@ -141,9 +161,10 @@ An amendment blocker resumes after its amendment records an approved resolution.
 An operational blocker resumes after its recorded condition is satisfied. Do
 not erase completed phase, blocker, or amendment history.
 
-The initial next action is always to invoke `continue-plan` and inspect the live
-repository before implementation. Update the Agent's log before dispatch, after
-results, and whenever state or resume instructions change.
+The initial `current.action` is to implement the approved current phase, not
+merely load the folder. `execute-phase` inspects the live repository before
+dispatch. Update the Agent's log before dispatch, after results, and whenever
+state or resume instructions change.
 
 ## Optional task artifact
 

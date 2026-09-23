@@ -1,13 +1,13 @@
 ---
 name: execute-phase
-description: Execute one approved feature phase with a proportionate implementation method, adapt through amend-plan when evidence changes the plan, review the complete phase diff, and wait for approval before publishing.
+description: Coordinate a phase worker through implementation, validation, review fixes, and approval-gated publication of one approved feature phase.
 ---
 
 # Execute Phase
 
-Execute one current phase. The main agent owns implementation, tests,
-validation, review fixes, state, and handoff. Use sub-agents only when
-independent work benefits from parallel or isolated context.
+Coordinate one current phase. The coordinator owns shared plans, the Agent's
+log, approvals, review orchestration, and publication. A phase worker owns
+implementation, tests, validation, review fixes, and local commits.
 
 The initial endpoint is a validated, reviewed local branch with committed
 changes. Stop there unless the user explicitly requested publication.
@@ -16,6 +16,7 @@ changes. Stop there unless the user explicitly requested publication.
 
 - `amend-plan`
 - `code-review`
+- `model-selection`
 
 Use `test-quality` whenever tests change. Use `tdd` only for substantial feature
 work with multiple observable behaviors. If a required skill is unavailable,
@@ -27,11 +28,33 @@ stop and tell the user to make it available.
 | --- | --- | --- |
 | Feature folder | Yes | Folder containing the approved plan artifacts. |
 | Current phase | Yes | Approved spec, Brief inline spec, or outline-only phase. |
-| Agent's log | Yes | `execution-progress.html`. |
+| Agent's log | Yes | `execution-progress.json`. |
 | Requested action | Yes | Draft/implement/resume, address feedback, or publish. |
 
 Use recorded repository, branch, target, validation, and pull-request values.
-Implementation method and sub-agent use are execution decisions.
+
+## Worker boundary
+
+Use one implementation worker at a time. Prefer the host's child-worktree
+support; otherwise use a child agent in the verified source worktree. If neither
+is available, record an operational blocker rather than implementing in the
+coordinator. Invoke `model-selection` before dispatch.
+
+Give the worker an explicit bounded action, approved spec and amendments,
+repository/worktree and source branch, fixed point, validation requirements,
+and applicable findings. Workers use `tdd` and `test-quality` as needed; they
+return plan-change evidence to the coordinator rather than invoking planning or
+review workflows, editing shared artifacts, or launching further agents.
+
+Reuse the worker and its worktree for fixes and feedback when available.
+Record its assignment before dispatch. On resume, reconcile the recorded
+worker's status and worktree before reusing or replacing it; never dispatch
+over an active writer. A replacement continues from the recorded branch and
+fixed point.
+
+Each result identifies the worktree, branch, HEAD, commits, changed paths,
+validation evidence, adaptations, and blockers. Inspect the returned branch
+and diff before accepting the result and updating the Agent's log.
 
 ## Durable artifact boundary
 
@@ -55,8 +78,12 @@ artifact refers to phases or exposes the temporary execution structure.
 Read the Agent's log first, then the current phase material. Read the overall
 plan only for linked cross-cutting decisions.
 
-For a log without schema version `2`, read and apply
+For a legacy log or a schema other than `3`, read and apply
 `../design-plan/references/legacy-normalization.md` before routing.
+
+On resume, start at the recorded unfinished action. Reuse completed work and
+still-valid validation and review evidence; preserve the fixed point, findings,
+and review budget instead of restarting implementation or Deep review.
 
 Before changing anything:
 
@@ -67,13 +94,20 @@ Before changing anything:
    approved resolution. An operationally blocked phase is eligible when its
    recorded resume condition is satisfied. A `review` phase is eligible only
    for feedback or publication, not new implementation.
-3. Inspect the live repository, branch, HEAD, remotes, and worktree.
+3. Inspect the live repository, branch, HEAD, remotes, and recorded worker
+   worktree when present. Use that worktree for subsequent code inspection,
+   review, and publication; the coordinator's checkout may differ.
 4. Compare live state with the Agent's log. Planning snippets are not source
    truth.
 5. Identify unrelated worktree changes, determine whether they overlap this
    phase, and preserve them. Ask the user only when overlap or ownership makes
    proceeding unsafe.
 6. Confirm the approved source branch. Ask when none is recorded or active.
+
+For implementation, prepare or reuse the worker's worktree on that source
+branch before recording the fixed point. Child-agent execution uses the
+verified existing source worktree exclusively. Draft-only actions need no
+worker worktree.
 
 When live evidence changes the plan, invoke `amend-plan`. Continue immediately
 after a clarification, local adaptation, or approved focused amendment. Stop
@@ -108,25 +142,25 @@ branch, timestamp, and exact next action.
 
 ## 2. Implement the phase
 
-Use TDD only for substantial feature behavior. Implement refactoring, CI or
-build configuration, test-only work, documentation, narrow fixes, and other
-straightforward changes directly. For mixed work, use TDD only for the
-substantial behavior.
+Assign implementation to the phase worker. It uses TDD only for substantial
+feature behavior and implements refactoring, CI or build configuration,
+test-only work, documentation, narrow fixes, and other straightforward changes
+directly. For mixed work, use TDD only for the substantial behavior.
 
-Read relevant live code and implement the approved outcome. Follow
-`test-quality` for changed tests. Run targeted validation while working and the
-recorded final validation when complete. Apply the durable artifact boundary to
-the complete changed content before committing.
+The worker reads relevant live code and implements the approved outcome,
+follows `test-quality` for changed tests, and runs targeted and recorded final
+validation. It applies the durable artifact boundary before committing.
 
 Local implementation choices are available to the agent while the approved
 outcome, acceptance criteria, public contracts, validation, and phase boundary
-remain true. Record meaningful local adaptations through `amend-plan`; do not
-turn ordinary implementation choices into approval gates.
+remain true. The worker reports meaningful local adaptations for the
+coordinator to record through `amend-plan`; ordinary implementation choices do
+not become approval gates.
 
-When evidence crosses an approved invariant, invoke `amend-plan` and follow its
-classification. Otherwise complete the phase, commit locally without pushing,
-and update the Agent's log with changed paths, validation, commits, and
-amendments.
+When evidence crosses an approved invariant, the worker pauses and returns it.
+The coordinator invokes `amend-plan` and resumes the worker when permitted.
+Otherwise the worker finishes the assigned implementation and commits locally
+without pushing. The coordinator records its results and starts review.
 
 ## 3. Review the complete phase
 
@@ -137,7 +171,7 @@ After initial implementation and final validation, run exactly one Deep
 - fixed point: recorded phase starting SHA;
 - review head: current local HEAD;
 - originating intent: current approved plan plus amendments;
-- repository: live repository;
+- repository: worker's verified worktree;
 - complete phase commit list and diff; and
 - validation commands, results, and exclusions already produced by this
   workflow.
@@ -151,9 +185,11 @@ Route genuine design ambiguity through `amend-plan`; do not resolve it silently.
 
 ## 4. Fix findings
 
-Fix every blocker and every proportionate material improvement that protects
-the approved phase outcome. Add useful regression coverage, run targeted and
-final validation, and create a new local commit without amending or pushing.
+Assign every blocker and every proportionate material improvement protecting
+the approved outcome to the phase worker. It adds useful regression coverage,
+runs targeted and final validation, and creates a new local commit without
+amending or pushing. The coordinator records the results and reruns the
+appropriate review.
 
 Record a material improvement as follow-up instead of expanding the phase when
 it is outside the approved boundary or disproportionate to the concrete impact.
@@ -206,9 +242,11 @@ publication permission.
 
 On an explicit publish action:
 
-1. Reload the Agent's log and inspect branch, HEAD, and worktree.
-2. If reviewed state changed, rerun required validation and classify the delta
-   using the Verify, Light, and Deep invalidation rules in section 4.
+1. Reload the Agent's log and inspect the recorded worker branch, HEAD, and
+   worktree.
+2. If reviewed state changed, have the worker rerun required validation and
+   classify the delta using the Verify, Light, and Deep invalidation rules in
+   section 4.
 3. Invoke `pr-description` with the target, approved intent and amendments,
    reviewed diff, commits, validation, and linked artifacts. Use its output
    unchanged after confirming it satisfies the durable artifact boundary.
@@ -231,7 +269,13 @@ For feedback on an existing phase pull request:
 1. Retrieve the current approved feedback through the provider integration.
 2. Address only feedback within the current approved phase and amendments.
 3. Route changed design requirements through `amend-plan`.
-4. Follow `test-quality`, run validation, commit locally, and classify the
-   feedback delta using the Verify, Light, and Deep invalidation rules in
-   section 4.
+4. Assign the approved fixes to the phase worker, including `test-quality`,
+   validation, and local commits. Classify the returned feedback delta using
+   the Verify, Light, and Deep invalidation rules in section 4.
 5. Wait for explicit approval before pushing follow-up commits.
+
+## Coordinator replacement
+
+When the user wants to change coordinator or clear the session, invoke
+`plan-handoff`. Checkpoint the worker and current review state rather than
+starting a replacement coordinator inside the existing execution tree.
