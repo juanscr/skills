@@ -89,17 +89,3 @@ exception in current position before dispatch; `execute-phase` treats that
 explicit designation as current for the action.
 
 Never treat a pull request as merged without the user's report.
-
-## Safety
-
-Before changing code or progress:
-
-- confirm the recorded repository exists;
-- inspect its live branch and worktree;
-- compare them with the Agent's log; and
-- surface stale or conflicting handoff information through `amend-plan` instead
-  of inventing a replacement.
-
-Use every execution value that the Agent's log records. Implementation method,
-sub-agent use, and review configuration remain decisions of their owning
-skills; missing values for them are not planning blockers.

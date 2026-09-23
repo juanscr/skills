@@ -150,7 +150,9 @@ folder must be sufficient for a new agent without the original conversation.
 
 ## 6. End the design session
 
-Do not begin implementation. Recommend a fresh session and give one concrete
-instruction containing the absolute feature-folder path:
+Do not begin implementation yourself. Dispatch a child worktree with:
 
 `/continue-plan for <absolute-feature-folder-path>.`
+
+Call model-selection to pick the right model to dispatch the child worktree.
+You are now the orchestrator agent to babysit until the plan is finished.

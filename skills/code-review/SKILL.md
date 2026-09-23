@@ -12,9 +12,6 @@ Read and follow:
 
 - `references/review-contract.md`
 
-Read `test-quality` and both references before reviewing added or changed
-tests. If unavailable when tests changed, stop and tell the user.
-
 ## Leaf reviewer boundary
 
 This skill owns review orchestration. Every reviewer it launches is a leaf
@@ -83,11 +80,7 @@ boundary above.
 Use three independent reviewers when the change modifies production behavior
 and the lenses have materially different contracts or call paths to inspect:
 
-| Reviewer | Model | Effort |
-| --- | --- | --- |
-| Code quality and comments | `gpt-5.6-terra` | high |
-| Specification fidelity | `gpt-5.6-terra` | high |
-| Skeptical risk | `gpt-5.6-sol` | high |
+Call model-selection to know which agents to use.
 
 Launch all three in parallel. Each receives:
 
@@ -103,7 +96,7 @@ Launch all three in parallel. Each receives:
 
 ### Light
 
-Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
+Launch one `general-purpose` reviewer. Call model-selection for model picking.
 Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
 delta since the Deep-review head, originating intent, validation evidence, and
 relevant directly coupled source. Apply the leaf reviewer boundary above.
@@ -113,11 +106,11 @@ If the delta meets a Deep invalidation condition, stop and return
 
 ### Verify
 
-Launch one `general-purpose` reviewer using `gpt-5.6-luna` at high effort.
+Launch one `general-purpose` reviewer. Check model-selection to pick the model.
 Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
 since the reviewed head, retained findings, resolution commits, originating
-intent, validation evidence, and directly coupled source.
-Apply the leaf reviewer boundary above.
+intent, validation evidence, and directly coupled source. Apply the leaf
+reviewer boundary above.
 
 If the delta expands beyond retained findings, return `light review required`.
 If it meets a Deep invalidation condition, return `deep review required`.

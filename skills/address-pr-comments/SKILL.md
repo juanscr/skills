@@ -55,9 +55,6 @@ review summary that contains actionable feedback. Exclude resolved, closed,
 outdated, superseded, and purely conversational comments from the action set,
 but retain enough metadata to explain exclusions.
 
-Re-fetch the head SHA after collection. If it changed, discard the snapshot and
-collect it once more. Stop if it changes again.
-
 Build the current intent in this order:
 
 1. current approved specification linked from the pull request or repository;
@@ -75,15 +72,13 @@ as a confidence limit; do not block analysis solely because it is absent.
 Verify each comment against the pinned diff, current source, tests, and intent.
 Assign one category:
 
-- **Must fix:** a reproducible defect, unmet approved requirement, broken
-  contract, security or data-integrity risk, build or test failure, or another
-  issue that makes the pull request unsafe or incomplete.
-- **Good to have:** a correct, in-scope improvement to maintainability,
-  clarity, resilience, documentation, or design that is worthwhile but does
-  not block the intended behavior.
-- **No-Go:** feedback that contradicts approved intent, expands scope without
-  necessity, is factually incorrect, is stale or already satisfied, or would
-  weaken the change. A preference without a concrete benefit belongs here.
+- **Material fixes**: any fix that is relevant and improves the pull request
+  on any value (readability, security, test quality or more).
+- **Conflicting**: it conflicts with the spec but the reviewer is raising a
+  valid point. A conflict does not necessiraly mean it should not be fixed, as
+  we may need to revaluate an assumption.
+- **No-Go:** Feedback that was already decided upon and that is repeated,
+  brings no additional context or it does not improve the spec in any way.
 
 Assess the substance rather than the commenter's wording or authority.
 Deduplicate comments with the same root cause, but preserve every provider
@@ -102,21 +97,17 @@ Present:
 **Intent source:** <spec, linked artifact, or best-attempt basis>
 **Signal:** <must-fix count> Must fix, <good-to-have count> Good to have, <no-go count> No-Go
 
-### Must fix
-| ID | Comment | Evidence | Why it matters | Proposed response |
-| --- | --- | --- | --- | --- |
+### Material fixes
+| ID | Comment | Evidence | Why it matters |
+| --- | --- | --- | --- |
 
-### Good to have
-| ID | Comment | Evidence | Value and tradeoff | Proposed response |
+### Conflicting
+| ID | Comment | Evidence | Value and tradeoff | Proposed path |
 | --- | --- | --- | --- | --- |
 
 ### No-Go
 | ID | Comment | Evidence | Why it should not be implemented | Proposed response |
 | --- | --- | --- | --- | --- |
-
-### Proposed execution
-| ID | Action | Method | Validation |
-| --- | --- | --- | --- |
 ```
 
 Keep entries concise, link or identify the original thread, and call out
@@ -127,17 +118,7 @@ overridden. State explicitly that approval authorizes the selected code
 changes, tests, commit, push to the pull request's existing source branch, and
 replies to every analyzed active comment. Then stop.
 
-## 5. Revalidate the approved plan
-
-After approval, fetch the current head SHA and active feedback again. Continue
-only when the approved comments and relevant code still match the presented
-snapshot. Reclassify and request approval again if the head changed, a comment
-was edited or resolved, or new active feedback affects the plan.
-
-Check out the existing pull-request source branch without discarding local
-changes. Do not create a replacement pull request or rewrite branch history.
-
-## 6. Implement with the right test boundary
+## 5. Implement with the right test boundary
 
 For each approved change, choose a proportionate method:
 
@@ -152,10 +133,10 @@ For each approved change, choose a proportionate method:
   evidence. If one is not feasible, record why and use the narrowest reliable
   validation instead.
 
-Implement only approved Must fix and Good to have IDs. A user-approved No-Go
-override becomes an explicit scope decision; record that decision with the
-change. Run the repository's smallest existing targeted validation throughout,
-then its required final validation.
+Implement only approved feedback. A user-approved No-Go or Conflicting override
+becomes an explicit scope decision; record that decision with the change. Run
+the repository's smallest existing targeted validation throughout, then its
+required final validation.
 
 Before committing, map every changed path and test to an approved ID. Leave
 unrelated improvements untouched. Create a normal commit on the source branch
@@ -174,15 +155,11 @@ When `human-voice` returns reply text, post it separately to that comment:
 
 - for an implemented comment that needs context, state only the useful context
   not already clear from the diff;
-- for a No-Go or unselected comment, state the evidence-backed reason it was
-  not changed without sounding defensive; and
+- for a unselected comment, state the evidence-backed reason it was not changed
+  without sounding defensive; and
 - for duplicate comments, answer the specific commenter and reference the
   shared fix rather than posting a generic duplicate response.
 
 Post through the selected provider integration. Resolve a thread only after its
-approved fix is pushed, verified, and directly answers the thread. Leave No-Go,
-unselected, partially addressed, or decision-seeking threads open.
-
-Re-fetch the pull request and verify the pushed commit and every posted reply.
-Report the commit SHA, validation result, replies created, threads resolved
-without reply, and any thread left open with its reason.
+approved fix is pushed, verified, and directly answers the thread. Comments
+that where rejected mark them as Won't Fix or close them.
