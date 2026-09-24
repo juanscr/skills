@@ -107,7 +107,7 @@ Use these top-level keys:
 | `phases` | Phase records described below, keyed by stable string IDs such as `"1"` or `"1.1"`. |
 | `amendments` | Amendment history with stable IDs and preserved prior decisions. |
 | `pullRequests` | PR register retaining phase, provider ID, URL, creation time, state, and user-reported merge status. |
-| `handoffs` | Transfer history: outgoing coordinator, timestamp, reason, and relevant context not already recorded elsewhere. |
+| `handoffs` | Transfer history: outgoing coordinator, timestamp, reason, remaining context, and each worktree's verified checkpoint remote URL (without credentials), branch, and SHA. |
 | `legacySource` | Optional path to the preserved pre-migration log; never a second writable source. |
 
 Each phase has `name`, `kind` (`executable`, `container`, or `superseded`),

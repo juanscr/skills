@@ -62,6 +62,13 @@ claiming ownership. A `handoff-ready` checkpoint transfers coordination, not
 new approval. If the previous coordinator or a worker may still be writing,
 settle ownership before dispatch or shared-artifact edits.
 
+For a pushed handoff, fetch the recorded checkpoint branches and verify their
+SHAs are reachable. Reuse the source worktree or restore it from the checkpoint
+when unavailable; the host's fresh worktree may be on a different branch.
+Reconcile newer commits and preserve unrelated changes, then update repository
+and worker paths in the log before dispatch. An unavailable checkpoint is a
+blocker, not permission to restart from the target branch.
+
 ## Resume behavior
 
 When neither the user nor a `design-plan` handoff supplied an action, report the

@@ -10,7 +10,8 @@ log, approvals, review orchestration, and publication. A phase worker owns
 implementation, tests, validation, review fixes, and local commits.
 
 The initial endpoint is a validated, reviewed local branch with committed
-changes. Stop there unless the user explicitly requested publication.
+changes. Stop there unless the user explicitly requested publication or a
+`plan-handoff` checkpoint.
 
 ## Required skills
 
@@ -235,8 +236,9 @@ When implementation, validation, and final review are publishable:
    follow-ups.
 5. Stop unless the user explicitly requested publication in this action.
 
-Do not push, open a pull request, or post provider content without explicit
-publication permission.
+Require explicit publication permission for pushes, pull requests, and provider
+content. An explicit `plan-handoff` instead follows that skill's checkpoint-only
+push authorization; this does not satisfy PR-readiness or approval gates.
 
 ## 6. Publish the pull request
 
@@ -272,7 +274,8 @@ For feedback on an existing phase pull request:
 4. Assign the approved fixes to the phase worker, including `test-quality`,
    validation, and local commits. Classify the returned feedback delta using
    the Verify, Light, and Deep invalidation rules in section 4.
-5. Wait for explicit approval before pushing follow-up commits.
+5. Wait for explicit approval before pushing follow-up commits, except for an
+   explicit `plan-handoff` checkpoint under that skill's rules.
 
 ## Coordinator replacement
 

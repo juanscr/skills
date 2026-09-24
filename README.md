@@ -23,7 +23,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | --- | --- |
 | `/design-plan` | Start a complex feature with repository research, proportionate planning, explicit decisions, and an approved first phase. |
 | `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
-| `/plan-handoff` | Save a safe coordinator checkpoint before clearing the session or moving the plan to another agent. |
+| `/plan-handoff` | Commit and push a recoverable checkpoint before clearing the session or moving the plan to another agent. |
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
 | `/address-pr-comments` | Classify active GitHub or Azure DevOps PR feedback, approve the response plan, then implement, push, and reply. |
@@ -68,9 +68,11 @@ are migrated before work begins and retained as read-only archives.
 
 Use `/plan-handoff` when the coordinator's context is too large or you want
 another agent to take over. It checkpoints active work into the JSON log and
-returns the exact `/continue-plan` command for the new session. Existing
-approval and merge gates survive the transfer; no separate handoff file is
-needed.
+commits and pushes in-scope changes before returning the exact `/continue-plan`
+command. A blocked push blocks handoff. The log records verified remote
+checkpoints so a fresh worktree can recover the code; plans and local evidence
+stay outside disposable worktrees. Review, PR-creation, and merge gates survive
+the transfer; no separate handoff file is needed.
 
 Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
 an existing PR; it always waits for approval before posting feedback.

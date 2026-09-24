@@ -9,7 +9,7 @@ delegated work, not its file extension or the review mode's name:
 | Work | Model ID | Reasoning | Context tier |
 | --- | --- | --- | --- |
 | Most implementation and ordinary code review | `gpt-6-sol` | `high` | `long_context` |
-| Bounded, low-risk execution or simple review with settled requirements | `gpt-6-luna` | `max` | `long_context` |
+| Bounded, low-risk execution or simple review with settled requirements | `gpt-6-luna` | `xhigh` | `long_context` |
 | Research, orchestration, complex design, skeptical or high-risk review | `gpt-6-astra` | `high` | `long_context` |
 | Visual implementation or visual-only review of HTML, CSS, SVG, or other presentation artifacts from settled requirements | `claude-opus-5.5` | `medium` | Runtime default |
 
