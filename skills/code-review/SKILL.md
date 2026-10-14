@@ -12,17 +12,23 @@ Read and follow:
 
 - `references/review-contract.md`
 
-## Leaf reviewer boundary
+## Reviewer boundaries
 
-This skill owns review orchestration. Every reviewer it launches is a leaf
-agent.
+This skill owns the pinned snapshot, parallel dispatch, and final synthesis.
+Its built-in reviewers are leaf agents. The optional repository-review branch
+is a separate orchestrator that follows the verified repository skill's
+delegation instructions.
 
-Prefix every reviewer task with `CODE_REVIEW_LEAF: true` and tell the reviewer
+Prefix every built-in reviewer task with `CODE_REVIEW_LEAF: true` and tell it
 to perform the supplied role directly with read-only tools. A task carrying
 that marker must not invoke any skill, launch an agent, or repeat this skill's
 pin, dispatch, or synthesis steps. If a leaf agent invokes this skill despite
 the task boundary, it must stop at this section and return to its supplied
 review role without dispatching.
+
+A task carrying `REPOSITORY_REVIEW_BRANCH: true` runs its verified repository
+workflow. If it reaches this orchestrator instead, return a blocked
+repository-review result to the parent without dispatching.
 
 ## Inputs
 
@@ -62,10 +68,25 @@ Verify additionally requires every retained finding and its expected resolution.
 
 ## 2. Dispatch by mode
 
-Invoke `model-selection` for every reviewer in every mode, including combined
-Deep review. This skill chooses reviewer roles and count; `model-selection`
-owns model, reasoning effort, and context tier. If unavailable, stop before
-dispatch.
+Invoke `model-selection` for every agent this skill launches in every mode,
+including combined Deep review and the repository-review branch. This skill
+chooses its built-in reviewer roles and count; `model-selection` owns their
+model, reasoning effort, and context tier, plus the repository branch's outer
+agent settings. The repository skill owns dispatch inside that branch. If
+`model-selection` is unavailable, stop before dispatch.
+
+### Repository review (parallel)
+
+Before dispatch, look for a repository-owned review skill in repository
+guidance and repo-local skill directories. When a candidate exists, read and
+follow `references/repository-review.md` to verify the exact entrypoint and
+prepare its task. A matching name alone is insufficient.
+
+Complete the selected mode's eligibility checks below before launching any
+reviewer. Launch the verified repository branch in the same parallel batch as
+the selected built-in reviewer(s); await both branches before synthesis. When
+no repository review skill exists, run only the built-in reviewers and record
+that exclusion.
 
 ### Deep
 
@@ -99,24 +120,25 @@ Launch all three in parallel. Each receives:
 
 ### Light
 
+If the delta meets a Deep invalidation condition, stop and return
+`deep review required` instead of dispatching either branch.
+
 Launch one `general-purpose` reviewer.
 Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
 delta since the Deep-review head, originating intent, validation evidence, and
 relevant directly coupled source. Apply the leaf reviewer boundary above.
 
-If the delta meets a Deep invalidation condition, stop and return
-`deep review required` instead of performing Light review.
-
 ### Verify
+
+If the delta meets a Deep invalidation condition, return `deep review required`.
+Otherwise, if it expands beyond retained findings, return
+`light review required`. Stop before dispatching either branch in both cases.
 
 Launch one `general-purpose` reviewer.
 Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
 since the reviewed head, retained findings, resolution commits, originating
 intent, validation evidence, and directly coupled source. Apply the leaf
 reviewer boundary above.
-
-If the delta expands beyond retained findings, return `light review required`.
-If it meets a Deep invalidation condition, return `deep review required`.
 
 ## 3. Finding contract
 
@@ -152,11 +174,17 @@ Verify uses the output contract in `verify-reviewer.md`.
 
 ## 4. Synthesize
 
+Consume results from both branches. Normalize repository findings to this
+mode's output contract while preserving their repository-skill provenance.
+Use the repository branch's completion rules in
+`references/repository-review.md` when that branch was prepared.
+
 For Deep and Light:
 
 1. Verify each finding against the pinned snapshot and relevant source.
 2. Remove false positives, unsupported claims, scope creep, and duplicate root
-   causes.
+   causes across built-in and repository results; retain all contributing
+   lenses for a merged finding.
 3. Assign stable IDs (`CR-1`, `CR-2`, ...).
 4. Separate blockers, material improvements, and genuine design decisions.
 5. Record mode, fixed point, reviewed head, validation evidence consumed, and
@@ -193,7 +221,7 @@ Return Deep and Light results as:
 <Deep only; short evidence-backed observations, or "None worth calling out.">
 
 ### Scope
-<Commits, validation evidence consumed, and exclusions.>
+<Commits, validation evidence consumed, exclusions, and repository-review skill path and branch status.>
 ```
 
 Return Verify results as a finding-status table plus any directly coupled

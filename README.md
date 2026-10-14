@@ -76,6 +76,10 @@ the transfer; no separate handoff file is needed.
 
 Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
 an existing PR; it always waits for approval before posting feedback.
+When the target repository supplies a review skill, `/code-review` verifies
+its exact source and runs it in parallel with its built-in reviewers. The
+repository branch follows that skill's own child-reviewer instructions under
+the same pinned, read-only review scope; findings are verified and merged.
 Use `/address-pr-comments <URL>` when a PR already has active feedback that
 needs triage, approved implementation, and provider replies.
 

@@ -3,11 +3,19 @@
 All review modes are independent, read-only analysis of a pinned change. The
 implementation workflow and CI own validation.
 
-## Leaf execution
+## Execution boundaries
 
-Perform the assigned review directly. Use read-only source navigation and
-return findings to the parent orchestrator; do not delegate any part of the
-review to another agent.
+Built-in reviewers marked `CODE_REVIEW_LEAF: true` perform their assigned role
+directly with read-only tools and return findings to the parent orchestrator.
+They do not invoke skills or delegate review work.
+
+The repository-review orchestrator marked `REPOSITORY_REVIEW_BRANCH: true`
+invokes the exact repository skill verified by the parent and follows that
+skill's child-agent or thread instructions. This is the only nested-dispatch
+exception. Its descendants inherit the pinned snapshot, selected mode, and
+read-only limits in this contract; leaf markers apply only to built-in
+reviewers, not to this branch. It returns results to the parent rather than
+re-entering the parent's review orchestration.
 
 ## Do not become CI
 
@@ -36,6 +44,9 @@ to changed behavior or retained findings. No mode performs a general codebase
 audit.
 
 ## Modes
+
+Reviewer counts below describe the built-in branch. The repository skill owns
+its additional topology within the same mode's scope.
 
 ### Deep
 
