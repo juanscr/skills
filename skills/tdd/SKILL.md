@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Implement a substantial approved feature phase through behavior-focused red-green slices. Use only for large feature work with multiple observable behaviors, not routine CI, test-only, narrow bug-fix, or small refactoring changes.
+description: Use only for large feature work with multiple observable behaviors, not routine CI, test-only, narrow bug-fix, or small refactoring changes.
 ---
 
 # Test-Driven Development

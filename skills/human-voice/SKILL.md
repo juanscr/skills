@@ -1,6 +1,6 @@
 ---
 name: human-voice
-description: Write concise messages on the user's behalf. Use for pull-request replies and other responses that should sound direct, simple, and informed.
+description: Use when speaking in human's behalf.
 ---
 
 # Human Voice
