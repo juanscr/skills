@@ -48,8 +48,8 @@ using the parent's `model-selection` choice for orchestration work. Supply:
 - the repository root, resolved base and head SHAs, complete commits,
   changed-file list, diff or prepared snapshot, and exact read-only commands;
 - originating intent, validation evidence, exclusions, and selected mode;
-- the previous reviewed head and resolution delta for Light and Verify, plus
-  retained finding IDs, evidence, and expected resolutions for Verify; and
+- for Follow-up, the previous reviewed head, the delta, and open finding IDs
+  with evidence and expected resolutions; and
 - the parent's mode-specific finding or verification output contract.
 
 Tell the outer agent to invoke the verified repository skill, follow its
@@ -62,8 +62,8 @@ through descendants to prevent re-entry into the personal orchestrator.
 Every descendant reviews the supplied immutable SHAs, not a newly resolved
 `HEAD`, worktree diff, or different merge base. Consume supplied validation
 evidence rather than running gates. Keep the mode's scope: Deep reviews the
-complete change, Light reports only blockers and design decisions, and Verify
-checks retained findings and directly coupled regressions. A repository skill
+complete change, and Follow-up checks open findings and reports only blockers
+and design decisions from the delta. A repository skill
 need not use these mode names, but must honor their boundaries.
 
 Request the selected source path, reviewed SHAs, completion status, any
@@ -81,12 +81,12 @@ Scope alongside available built-in findings; never claim full review completion.
 When no independent repository skill exists, record that fact without treating
 the built-in review as incomplete.
 
-For Deep and Light, verify and deduplicate repository findings with built-in
+For both modes, verify and deduplicate repository findings with built-in
 findings under the parent's finding contract. Preserve repository provenance
 in the Lens field. Native severity labels alone do not establish a blocker.
 
-For Verify, retain the parent's stable finding IDs, reconcile dispositions from
+For Follow-up, retain the parent's stable finding IDs, reconcile statuses from
 both branches against source evidence, and keep disagreements unresolved until
 the evidence settles them. A required repository branch that did not complete
-prevents `all retained blockers verified`; return `verification incomplete`
-with the branch limitation instead.
+prevents `all open blockers resolved`; return `verification incomplete` with
+the branch limitation instead.

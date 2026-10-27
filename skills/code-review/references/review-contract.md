@@ -39,8 +39,8 @@ callers, callees, state owners, tests, and configuration needed to prove or
 disprove it. Stop when behavior and impact are established.
 
 Deep mode may follow cross-module ownership and lifecycle paths broadly enough
-to assess architecture and risk. Light and Verify modes stay directly coupled
-to changed behavior or retained findings. No mode performs a general codebase
+to assess architecture and risk. Follow-up mode stays directly coupled to
+changed behavior and open findings. No mode performs a general codebase
 audit.
 
 ## Modes
@@ -57,11 +57,12 @@ same evidence. Use independent code-quality, specification-fidelity, and
 skeptical-risk reviewers when production behavior gives those lenses distinct
 work. Report blockers, material improvements, and genuine design decisions.
 
-### Light
+### Follow-up
 
-One combined review for bounded expansion after a Deep review. The approved
-behavior and risk profile remain unchanged, but fixes added enough directly
-coupled code that finding-only verification is insufficient. Report only:
+One reviewer after fixes to a Deep-reviewed change. Give every open finding a
+status: `resolved`, `unresolved`, `regressed`, or
+`superseded by approved amendment`. Review the delta in the context of the
+final diff and report only:
 
 - reachable correctness or compatibility blockers;
 - violated acceptance criteria or public contracts;
@@ -70,34 +71,17 @@ coupled code that finding-only verification is insufficient. Report only:
 - evidence requiring a human-owned design decision.
 
 Do not report optional refactors, naming preferences, comment polish, generic
-abstraction opportunities, or speculative maintainability improvements.
-
-### Verify
-
-Confirm disposition of retained findings after fixes. Review the resolution
-delta and enough of the final full diff to ensure each affected contract still
-holds. Return a status for every supplied finding:
-
-- `resolved`;
-- `unresolved`;
-- `regressed`; or
-- `superseded by approved amendment`.
-
-Report a new issue only when the fix directly introduced a blocker in the same
-behavior or contract. Do not reopen the full review or search for unrelated
-improvements.
+abstraction opportunities, or speculative maintainability improvements, and do
+not reopen the full review.
 
 ## Review invalidation
 
-A recorded Deep review remains valid across fixes that stay within its findings
-and approved contract.
-
-Run Light when fixes expand directly coupled implementation beyond the retained
-findings but preserve architecture, behavior, and risk boundaries.
+A recorded Deep review remains valid across fixes that preserve its approved
+architecture, behavior, and risk boundaries; review those fixes with Follow-up.
 
 Run a new Deep review only when later changes invalidate the earlier review by:
 
-- adding behavior unrelated to retained findings;
+- adding behavior unrelated to open findings;
 - changing an approved outcome, acceptance criterion, or design decision;
 - changing a public API, schema, migration, serialization, or cross-process
   contract;

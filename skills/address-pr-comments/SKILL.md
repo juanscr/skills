@@ -64,8 +64,7 @@ record that decision with the change.
 For each approved change, choose a proportionate method:
 
 - Use red -> green TDD only when feedback changes substantial feature behavior
-  with multiple related observable slices and an approved phase spec. Invoke
-  `tdd` with that spec.
+  with multiple related observable slices. Invoke `tdd`.
 - Implement narrow bug fixes, CI or build changes, test-only changes,
   behavior-preserving refactors, naming changes, comments, and documentation
   directly.

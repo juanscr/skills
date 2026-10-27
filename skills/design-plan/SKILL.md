@@ -3,9 +3,9 @@ name: design-plan
 description: Use only when the user explicitly invokes design-plan.
 ---
 
-Create the smallest design package that lets the user defend the direction and
-lets a fresh agent begin the current phase safely. Planning establishes an
-amendable baseline, not a prediction of every implementation detail.
+Guide the user to an approved design they understand and can defend, then
+coordinate its execution. The user owns outcomes and decisions; the agent owns
+facts and implementation details.
 
 ## Inputs
 
@@ -13,148 +13,66 @@ amendable baseline, not a prediction of every implementation detail.
 | --- | --- | --- |
 | Task description | Yes | None |
 | Existing feature folder | No | None |
-| Planning mode | No | Standard |
-| Spec format | No | HTML; Markdown for Brief mode |
 | Spec root | No | `~/Documents/coding-specs` |
 
-Store specs at:
+Store specs at `<spec-root>/<repository-name>/<kebab-case-feature-name>/`.
+Plans are HTML unless the user asks for another format.
 
-`<spec-root>/<repository-name>/<kebab-case-feature-name>/`
-
-Allow the user to override the planning mode, format, and spec root, including
-choosing a directory inside the repository.
-
-The format choice applies to human-facing plans. The Agent's log is always
-`execution-progress.json`. Before revising an existing feature, migrate a
-legacy log through `references/legacy-normalization.md`.
-
-When revising an existing feature, use its folder. Preserve its Agent's log,
-completed phase history, amendment entries, and pull-request register. Mark
-replaced design text as superseded instead of erasing why it changed.
-
-## Required skills
-
-Use `grilling` only when a human-owned decision is unresolved.
-
-## Non-negotiable rules
-
-1. Ground design claims in repository evidence or a recorded user decision.
-2. The live repository is source truth. Plan snippets only explain decisions.
-3. Use plain English and the smallest artifact that carries the decision.
-4. Approval is an affirmative user statement naming the artifact or decision.
-   It remains valid until an amendment changes what was approved.
-5. Resolve every unknown that blocks the overall direction or current phase.
-   Record later-phase unknowns instead of guessing or resolving them early.
+When revising an existing feature, use its folder and preserve its Agent's log
+history. Migrate a legacy log through `references/legacy-normalization.md`
+first. Mark replaced design text **Superseded** instead of erasing why it
+changed.
 
 Read and follow:
 
 - [Artifact requirements](references/artifact-requirements.md)
 - [HTML standard](references/html-standard.md) when producing HTML
 
-## 1. Establish the decision horizon
+## Rules
 
-Search the live repository for the evidence needed to understand the task.
-Separate facts from decisions. Use `grilling` only for the frontier of decisions
-that must be settled to approve the overall direction or current phase.
+1. Look facts up yourself; ask the user only for decisions.
+2. Ground design claims in repository evidence or a recorded user decision.
+   The live repository is source truth.
+3. Keep the plan at the level of outcomes, behavior, boundaries, and decisions.
+   Leave implementation detail to execution.
+4. Start simple and go deeper wherever the user asks. Do not pre-teach.
+5. Approval is an affirmative user statement naming the artifact or decision.
 
-Choose Brief, Standard, or Deep using the artifact requirements. State the
-recommended mode, format, and expected artifacts before drafting; let the user
-override them.
+## 1. Understand the problem
 
-Create the feature folder once the repository and feature name are known, or
-reuse the supplied existing feature folder.
-Obtain explicit approval of the shared understanding when the overall direction
-and current decision horizon have no unresolved blocking decisions.
+Research the live repository. Use `grilling` for the decisions the user must
+make before the direction can be approved. Create the feature folder once the
+repository and feature name are known.
 
-## 2. Create and approve the overall plan
+## 2. Write and approve the plan
 
-Create `index.<format>`. It defines the current approved architecture and gives
-every phase an observable outcome, boundary, dependencies, acceptance criteria,
-and verification. Later phases remain outlines until they become current.
+Create `index.<format>` following the artifact requirements. Split the work
+into coherent, reviewable behavior slices; avoid infrastructure-only phases
+unless independently useful. Later phases may keep unknowns that do not block
+the first.
 
-Choose coherent, reviewable behavior slices. Avoid infrastructure-only slices
-unless independently useful. Explain why each dependency and phase boundary
-exists, while allowing a phase to split later when execution produces evidence.
+When the user asks about something, answer it and fold the answer into the
+plan when it belongs there. Present the plan for explicit approval.
 
-Draft and present every planning mode with the coordinator so repository
-evidence, decisions, and document context remain continuous. When an HTML
-diagram earns its place, use only the bounded SVG delegation defined by the
-HTML standard.
+After approval, optionally offer a concise GitHub issue or Azure DevOps work
+item. Ask for the provider and permission before creating one.
 
-The coordinator owns factual accuracy and software design. Resolve specific gaps
-through repository research or focused `grilling`; do not expand the decision
-horizon merely because a later phase contains uncertainty.
+## 3. Create the Agent's log
 
-Present the overall plan for explicit approval. After phase boundaries are
-approved, optionally offer a concise GitHub issue or Azure DevOps work item.
-Ask for the provider and explicit permission before creating one.
+Infer the target branch and required validation from the repository; ask only
+when unclear. Default to one pull request per phase.
 
-## 3. Create and approve the current phase
+Create `execution-progress.json` following the artifact requirements, with
+every phase `not started`. For an existing feature folder, update the log in
+place: reconcile phases by ID, keep all history, mark removed phases
+`superseded`, and resolve the pending re-plan amendment.
 
-For Brief mode, the overall plan may contain sufficient implementation detail
-and serve as the approved phase spec. Otherwise create
-`phase-<number>-<kebab-case-name>.<format>` for the first phase only.
+## 4. Continue as coordinator
 
-Reread the relevant live paths immediately before drafting. The phase spec must
-settle the outcome, boundary, public contracts, acceptance criteria, and
-verification needed to implement safely. It may leave internal implementation
-choices to execution.
+Invoke `continue-plan` with the absolute feature-folder path and the action
+**implement the current phase**. A folder-only handoff requests status, not
+execution.
 
-Present the phase for explicit approval. Offer to draft later phases now only
-when the user wants that work or their contracts must be settled to make the
-current phase safe.
-
-Before the Agent's log exists, incorporate new evidence into the affected draft,
-mark approved text superseded when needed, and obtain approval for the changed
-decision. Once the Agent's log exists, later evidence is handled through
-`amend-plan`. Do not regenerate the whole package unless the feature objective
-or overall decomposition is invalid.
-
-## 4. Set execution defaults
-
-Execution proceeds one phase at a time. Use one pull request per phase unless
-the user chooses another strategy.
-
-Before creating the Agent's log, obtain and record:
-
-- target branch;
-- required validation;
-- pull-request strategy; and
-- any external task artifact links.
-
-Worker dispatch, implementation method, and review configuration belong to
-their owning execution and review skills; they are not planning blockers.
-
-## 5. Create the Agent's log
-
-For a new feature folder, create `execution-progress.json` using the Agent's log
-requirements. Initialize every phase as `not started`. Mark the first phase spec
-`approved`; mark later phase specs `outline only` unless separately drafted and
-approved.
-
-For an existing feature folder, update its Agent's log in place. Reconcile
-phases by stable identity, preserve every existing phase and spec status plus
-execution history, initialize only newly introduced phases, and require
-approval for every changed current-phase spec.
-
-Resolve and link the pending re-plan amendment, clear its blocker after the
-redesigned baseline is approved, mark removed phases as `superseded`
-non-executable history, select a valid current phase, and retain every earlier
-phase, amendment, commit, and pull-request record.
-
-Set `current.action` to execute or draft the selected phase as its spec status
-requires. The feature folder must be sufficient for a new agent without the
-original conversation.
-
-## 6. Continue as coordinator
-
-Remain the feature coordinator. Invoke `continue-plan` with the absolute
-feature-folder path and the explicit action **implement the approved current
-phase**. A folder-only handoff requests status, not execution.
-
-`execute-phase` owns worker dispatch and result collection. Keep coordination
-in this session; pause for required decisions, publication permission, and the
-user's merge report. When every phase is complete, end coordination.
-
-When the user wants to replace the coordinator or clear its context, invoke
-`plan-handoff` instead of starting another coordinator alongside this one.
+Remain the coordinator. Pause for user decisions, publication approval, and
+merge reports. To replace the coordinator or clear the session, invoke
+`handoff`.

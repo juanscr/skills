@@ -25,11 +25,9 @@ The supported legacy shape has one phase-status column, no draft-spec state,
 and no partial kind, spec-status, or amendment-log structure. That workflow
 created its log only after phase-spec approval.
 
-For this shape, preserve phase numbers and statuses, use kind `executable`,
-mark linked phase specs `approved`, and mark phases without specs `outline only`.
-Use planning mode `Deep (legacy)` and infer human-spec format from linked files.
-Convert recorded deviations to amendments only where their evidence and
-approval are established.
+For this shape, preserve phase numbers and statuses. Treat linked phase specs as
+phase notes. Convert recorded deviations to amendments only where their
+evidence and approval are established.
 
 For a partial structure or ambiguous approval, preserve the source and ask for
 the missing decision. A linked file alone proves no approval outside the
@@ -45,7 +43,7 @@ recognized legacy shape.
    approvals, and review anchors with the source; verify referenced paths.
    Missing historical values stay unknown, not inferred from current HEAD.
 3. After a successful comparison, make it `execution-progress.json`. Keep the
-   original HTML unchanged as an archive and record it in `legacySource`.
+   original HTML unchanged as an archive and record its path in `legacySource`.
    Update progress-log links in the feature's plan artifacts to point to JSON.
 4. Resume from JSON only. Never update or merge the archived HTML afterward.
 

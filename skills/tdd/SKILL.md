@@ -6,11 +6,11 @@ description: Use only for large feature work with multiple observable behaviors,
 # Test-Driven Development
 
 Implement one substantial approved feature phase through repeated red -> green
-vertical slices. The phase spec defines the required behavior, acceptance
-criteria, public seams, and verification. The live repository defines the
-current code. Follow explicit repository guidance. When live evidence changes
-an approved invariant, return the evidence to `execute-phase` for
-classification through `amend-plan`.
+vertical slices. The plan defines the phase outcome and acceptance criteria;
+phase notes, when present, describe the intended approach. The live repository
+defines the current code. Follow explicit repository guidance. When a change
+would alter something the user approved, return the evidence to
+`execute-phase` for `amend-plan`.
 
 Read the `test-quality` skill and both of its references before writing tests.
 
@@ -18,7 +18,7 @@ Read the `test-quality` skill and both of its references before writing tests.
 
 | Input | Required | Description |
 | --- | --- | --- |
-| Phase spec | Yes | The approved current-phase spec or Brief inline phase plan. |
+| Phase | Yes | The phase outcome and acceptance criteria from the approved plan, plus phase notes when present. |
 | Repository | Yes | The live repository to change. |
 | Validation | Yes | Existing targeted and final validation commands recorded for the phase. |
 
@@ -26,15 +26,12 @@ Read the `test-quality` skill and both of its references before writing tests.
 
 Before writing a test:
 
-1. Read the entire phase spec and its acceptance criteria.
+1. Read the phase outcome, acceptance criteria, and notes.
 2. Read the live implementation, relevant tests, and repository guidance.
 3. Map each acceptance criterion to an observable behavior and public seam.
-4. Confirm that the phase spec settles the interface and test seam.
 
-Do not ask the user to reconfirm seams already approved in the phase spec. If a
-required seam is absent, ambiguous, or contradicted by live code, return the
-exact evidence and affected invariant. `execute-phase` routes it through
-`amend-plan`; do not invent a new interface.
+Choose the seams yourself. If testing a criterion requires changing an approved
+public contract, return the evidence instead of changing it.
 
 ## Rules of the loop
 
