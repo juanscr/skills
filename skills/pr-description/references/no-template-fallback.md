@@ -1,14 +1,10 @@
-# No-template fallback
-
 Use this structure only after the discovery step in `pr-description` establishes
 that no applicable template exists. Failed or incomplete lookups remain blocked.
 
 ```markdown
 ## Why
 
-## What changed
-
-## Architecture
+## How was it fixed
 
 ## Validation
 
