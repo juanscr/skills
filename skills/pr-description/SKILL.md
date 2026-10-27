@@ -8,6 +8,6 @@ found, use [Fallback template](references/no-template-fallback.md). If the
 template has instructions to push the user to do something, it can be removed
 from the description, don't include it verbatim. Never include numbers of lines
 modified, direct pointers to code paths. A good description explains why and
-how it was done without necessiraly talking about implementation details.
+how it was done without necessarily talking about implementation details.
 
 Use `human-voice` to talk in my tone.

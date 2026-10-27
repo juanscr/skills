@@ -22,10 +22,8 @@ change.
 | Current phase | Yes | Phase number, outline, and spec when one exists. |
 | Evidence | Yes | Live repository fact, review finding, or user decision that triggered the amendment. |
 
-Read the Agent's log first; migrate a legacy log through
-`../design-plan/references/legacy-normalization.md` before changing it. Then
-read the affected plan sections and live repository paths. Do not reread or
-rewrite unaffected phase specs.
+Read the Agent's log first, then the affected plan sections and live repository
+paths. Do not reread or rewrite unaffected phase specs.
 
 Follow the amendment and subphase artifact rules in
 `../design-plan/references/artifact-requirements.md`.
@@ -44,9 +42,6 @@ Classify by which approved invariant changes:
 
 Effort and file count do not determine the class. The affected approved
 invariant does.
-
-If focused `grilling` is required for a design amendment but unavailable, stop
-and tell the user to make it available.
 
 ## Amendment rules
 

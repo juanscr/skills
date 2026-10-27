@@ -1,6 +1,6 @@
 ---
 name: human-voice
-description: Use when speaking in human's behalf.
+description: Use when writing PR replies or other messages on the user's behalf.
 ---
 
 # Human Voice

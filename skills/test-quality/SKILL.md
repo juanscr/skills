@@ -1,6 +1,6 @@
 ---
 name: test-quality
-description: Write or evaluate behavior-focused tests with reliable assertions and boundary-aware mocking. Use whenever creating, changing, or reviewing tests; this does not require a TDD workflow.
+description: Use when creating, changing, or reviewing tests.
 ---
 
 # Test Quality

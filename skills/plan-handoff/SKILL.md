@@ -1,6 +1,6 @@
 ---
 name: plan-handoff
-description: Commit and push a recoverable feature checkpoint before replacing its coordinator or clearing the session. Use only for an explicit plan handoff or coordinator replacement.
+description: Use only when the user says plan handoff or replaces the plan coordinator.
 ---
 
 # Plan Handoff
@@ -15,9 +15,7 @@ An explicit restriction on committing or pushing remains a handoff blocker.
 
 ## 1. Reach a safe checkpoint
 
-Load `execution-progress.json` and the current phase. For a legacy log, apply
-`../design-plan/references/legacy-normalization.md` before proceeding.
-Follow the log contract in
+Load `execution-progress.json` and the current phase. Follow the log contract in
 `../design-plan/references/artifact-requirements.md`.
 
 Ask active workers to finish their current bounded operation or pause safely,

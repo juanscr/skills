@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Scan a codebase for deepening opportunities and save each candidate as an architecture-improvement spec. Use only when the user explicitly invokes improve-codebase-architecture.
+description: Use only when the user explicitly invokes improve-codebase-architecture.
 ---
 
 # Improve Codebase Architecture
@@ -61,39 +61,29 @@ report.
 
 ### 2. Present candidates and create reusable specs
 
-Write a self-contained HTML review to the OS temp directory. Resolve the temp
-directory from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and
-name it `<tmpdir>/architecture-review-<timestamp>.html`. Open it for the user
-and state its absolute path.
+Write a self-contained HTML review named `architecture-review-<timestamp>.html`
+to the OS temp directory. Open it for the user and state its absolute path.
 
-Use [HTML report guidance](HTML-REPORT.md) for the review. Each candidate must
-include:
-
-- involved files and modules;
-- the observed friction;
-- a plain-English deepening proposal;
-- benefits stated in terms of locality, leverage, and testing;
-- a side-by-side before/after visualisation; and
-- a `Strong`, `Worth exploring`, or `Speculative` recommendation badge.
+Use [HTML report guidance](HTML-REPORT.md) for the review. For each candidate,
+show its files and modules, friction, a plain-English deepening proposal,
+locality/leverage/testing benefits, a side-by-side before/after visualisation,
+and a `Strong`, `Worth exploring`, or `Speculative` badge.
 
 End the review with the top recommendation and why it ranks first. If a
 candidate conflicts with an ADR, surface it only when evidence shows enough
 friction to justify reopening that decision, and label the conflict clearly.
 
 For every candidate, create its own folder under the architecture-improvements
-spec root and write `index.html`. The candidate spec is self-contained and
-must include:
+spec root and write `index.html`. The self-contained candidate spec includes
+everything the review shows for that candidate, plus:
 
-1. purpose, observed friction, scope, non-goals, and recommendation strength;
-2. relevant current architecture with live-code evidence, including paths and
-   line ranges;
-3. the deletion-test result;
-4. the candidate deepening, its likely seam, and expected gains in locality,
-   leverage, and testability;
-5. before/after diagrams and the files expected to change;
-6. ADR evidence or conflicts, when applicable;
-7. uncertainties, assumptions, and questions that need design decisions; and
-8. a handoff section stating that this is a discovery spec, not an approved
+1. purpose, scope, and non-goals;
+2. live-code evidence with paths and line ranges;
+3. the deletion-test result and the likely seam;
+4. the files expected to change;
+5. ADR evidence or conflicts, when applicable;
+6. uncertainties, assumptions, and questions that need design decisions; and
+7. a handoff section stating that this is a discovery spec, not an approved
    implementation plan.
 
 The review only summarizes and links to the candidate specs. Do not propose

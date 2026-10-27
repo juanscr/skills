@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Run a pinned Deep, Light, or finding-verification review without duplicating CI validation. Use for local implementation review and PR-specific review.
+description: Use when reviewing a local change or a PR snapshot.
 ---
 
 # Code Review
@@ -20,15 +20,12 @@ is a separate orchestrator that follows the verified repository skill's
 delegation instructions.
 
 Prefix every built-in reviewer task with `CODE_REVIEW_LEAF: true` and tell it
-to perform the supplied role directly with read-only tools. A task carrying
-that marker must not invoke any skill, launch an agent, or repeat this skill's
-pin, dispatch, or synthesis steps. If a leaf agent invokes this skill despite
-the task boundary, it must stop at this section and return to its supplied
-review role without dispatching.
+to perform the supplied role directly with read-only tools. A leaf agent never
+invokes skills or launches agents; if it reaches this skill anyway, it stops
+here and returns to its review role.
 
-A task carrying `REPOSITORY_REVIEW_BRANCH: true` runs its verified repository
-workflow. If it reaches this orchestrator instead, return a blocked
-repository-review result to the parent without dispatching.
+A task carrying `REPOSITORY_REVIEW_BRANCH: true` that reaches this skill returns
+a blocked repository-review result to the parent without dispatching.
 
 ## Inputs
 
@@ -68,12 +65,8 @@ Verify additionally requires every retained finding and its expected resolution.
 
 ## 2. Dispatch by mode
 
-Invoke `model-selection` for every agent this skill launches in every mode,
-including combined Deep review and the repository-review branch. This skill
-chooses its built-in reviewer roles and count; `model-selection` owns their
-model, reasoning effort, and context tier, plus the repository branch's outer
-agent settings. The repository skill owns dispatch inside that branch. If
-`model-selection` is unavailable, stop before dispatch.
+Use `model-selection` for every agent this skill launches, including the
+repository-review branch.
 
 ### Repository review (parallel)
 
@@ -88,57 +81,24 @@ the selected built-in reviewer(s); await both branches before synthesis. When
 no repository review skill exists, run only the built-in reviewers and record
 that exclusion.
 
-### Deep
+### Built-in reviewers
 
-Choose the reviewer profile before dispatch.
+Every built-in reviewer is a `general-purpose` leaf agent (see **Reviewer
+boundaries**). Each receives the absolute path to `references/review-contract.md`,
+its role file, pinned revisions with read-only diff/log commands or the
+prepared snapshot, originating intent, validation evidence, repository
+guidance, directly coupled source, and the `test-quality` references when tests
+changed.
 
-Use one combined Deep reviewer when the change is confined to documentation,
-agent instructions, templates, test-only work, build or CI configuration, or
-another cohesive change where separate lenses would traverse substantially the
-same evidence. File extension alone does not decide the profile; classify by
-the behavior and contracts the changed artifact controls.
+| Mode | Precondition | Reviewers and role files | Extra inputs |
+| --- | --- | --- | --- |
+| Deep, combined | Documentation, agent instructions, templates, test-only, build/CI, or another cohesive change where separate lenses would traverse the same evidence. | One: `combined-reviewer.md` | Finding contract. |
+| Deep, split | Production behavior changes and the lenses have materially different contracts or call paths. | Three in parallel: `code-quality-reviewer.md`, `specification-fidelity-reviewer.md`, `skeptical-risk-reviewer.md` | Finding contract; only source needed for each lens. |
+| Light | If the delta meets a Deep invalidation condition, return `deep review required` without dispatching. | One: `light-reviewer.md` | Complete final diff and delta since the Deep-review head. |
+| Verify | Return `deep review required` on a Deep invalidation condition, or `light review required` when the delta expands beyond retained findings, without dispatching. | One: `verify-reviewer.md` | Final diff, delta since reviewed head, retained findings, resolution commits. |
 
-Launch one `general-purpose` reviewer.
-Give it the absolute paths to `review-contract.md`, `combined-reviewer.md`, and
-the `test-quality` references when tests changed. Apply the leaf reviewer
-boundary above.
-
-Use three independent reviewers when the change modifies production behavior
-and the lenses have materially different contracts or call paths to inspect:
-
-Launch all three in parallel. Each receives:
-
-- the leaf reviewer marker and boundary above;
-- the absolute path to `references/review-contract.md`;
-- the absolute path to its role file: `code-quality-reviewer.md`,
-  `specification-fidelity-reviewer.md`, or `skeptical-risk-reviewer.md`;
-- the absolute paths to `test-quality` and its references when tests changed;
-- pinned revisions and exact read-only diff/log commands or prepared snapshot;
-- originating intent, validation evidence, repository guidance, and only the
-  surrounding source needed for its lens; and
-- the finding contract below.
-
-### Light
-
-If the delta meets a Deep invalidation condition, stop and return
-`deep review required` instead of dispatching either branch.
-
-Launch one `general-purpose` reviewer.
-Give it `review-contract.md`, `light-reviewer.md`, the complete final diff, the
-delta since the Deep-review head, originating intent, validation evidence, and
-relevant directly coupled source. Apply the leaf reviewer boundary above.
-
-### Verify
-
-If the delta meets a Deep invalidation condition, return `deep review required`.
-Otherwise, if it expands beyond retained findings, return
-`light review required`. Stop before dispatching either branch in both cases.
-
-Launch one `general-purpose` reviewer.
-Give it `review-contract.md`, `verify-reviewer.md`, the final full diff, delta
-since the reviewed head, retained findings, resolution commits, originating
-intent, validation evidence, and directly coupled source. Apply the leaf
-reviewer boundary above.
+Classify Deep by the behavior and contracts the changed artifact controls, not
+its file extension.
 
 ## 3. Finding contract
 

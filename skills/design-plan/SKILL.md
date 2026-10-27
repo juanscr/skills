@@ -34,22 +34,17 @@ replaced design text as superseded instead of erasing why it changed.
 
 ## Required skills
 
-Use `grilling` only when a human-owned decision is unresolved. If a required
-skill for the selected path is unavailable, stop and tell the user to make it
-available.
+Use `grilling` only when a human-owned decision is unresolved.
 
 ## Non-negotiable rules
 
-1. Facts are the agent's responsibility. Decisions belong to the user.
-2. Ground design claims in repository evidence or a recorded user decision.
-3. The live repository is source truth. Plan snippets only explain decisions.
-4. Use plain English and the smallest artifact that carries the decision.
-5. Approval is an affirmative user statement naming the artifact or decision.
+1. Ground design claims in repository evidence or a recorded user decision.
+2. The live repository is source truth. Plan snippets only explain decisions.
+3. Use plain English and the smallest artifact that carries the decision.
+4. Approval is an affirmative user statement naming the artifact or decision.
    It remains valid until an amendment changes what was approved.
-6. Resolve every unknown that blocks the overall direction or current phase.
+5. Resolve every unknown that blocks the overall direction or current phase.
    Record later-phase unknowns instead of guessing or resolving them early.
-7. Keep repository implementation in phase workers. Start execution only after
-   the overall plan and current phase are approved and the Agent's log exists.
 
 Read and follow:
 

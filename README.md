@@ -33,55 +33,19 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 ## Expected flow
 
 1. Invoke `/design-plan` in the target repository. Approve the overall
-   direction and the first executable phase. Later phases may remain outlines.
-2. The same agent remains the feature coordinator and hands the explicit
-   implementation action to `continue-plan`. It owns shared plans, approvals,
-   and execution progress. To resume later, invoke `/continue-plan` with the
-   feature folder and desired action; a folder alone requests status and a
-   recommendation.
-3. `execute-phase` delegates implementation to a phase worker in a child
-   worktree when supported, otherwise a child agent. The worker implements,
-   validates, and commits locally; the coordinator records results and routes
-   changed invariants through `amend-plan`. TDD is reserved for substantial
-   feature behavior. The coordinator runs one Deep `code-review`, then Verify
-   or Light for worker fixes unless changes invalidate the Deep review.
-   Reviewers consume validation evidence rather than rerunning CI gates.
-4. Tell the agent to publish. `pr-description` follows the repository template,
-   then the agent pushes the approved branch, creates the PR, and records its
-   URL in execution progress.
-5. Use `/continue-plan` for phase feedback or to report that the PR merged.
-   Continue with the next eligible phase, drafting and approving its spec
-   before implementation when it was previously only an outline.
+   direction and the first phase; later phases may remain outlines.
+2. The same agent coordinates the feature through `continue-plan` and
+   `execute-phase`: a worker implements and commits locally, `code-review`
+   reviews it, and `execution-progress.json` records state.
+3. Tell the agent to publish. It writes the PR with `pr-description`, pushes,
+   and records the PR.
+4. Use `/continue-plan` for PR feedback or to report a merge; it moves to the
+   next phase. A folder alone requests status and a recommendation.
 
-Plans are baselines, not frozen predictions. `amend-plan` records local
-adaptations, splits phases into stable subphases such as `1.1` and `1.2`, and
-updates focused decisions without regenerating the whole package. Only a change
-to the feature objective, overall architecture, or decomposition returns to a
-full `/design-plan`.
-
-Human-facing plans contain the problem, design, decisions, phases, and approval
-questions. Plans default to HTML; Brief mode defaults to Markdown, and an
-explicit format request overrides either default. Planning HTML uses dark mode.
-The agent-only `execution-progress.json` stores state, evidence, approvals,
-worker assignments, reviews, and exact resume instructions. Legacy HTML logs
-are migrated before work begins and retained as read-only archives.
-
-Use `/plan-handoff` when the coordinator's context is too large or you want
-another agent to take over. It checkpoints active work into the JSON log and
-commits and pushes in-scope changes before returning the exact `/continue-plan`
-command. A blocked push blocks handoff. The log records verified remote
-checkpoints so a fresh worktree can recover the code; plans and local evidence
-stay outside disposable worktrees. Review, PR-creation, and merge gates survive
-the transfer; no separate handoff file is needed.
-
-Use `/code-review` independently for a local branch. Use `/pr-review <URL>` for
-an existing PR; it always waits for approval before posting feedback.
-When the target repository supplies a review skill, `/code-review` verifies
-its exact source and runs it in parallel with its built-in reviewers. The
-repository branch follows that skill's own child-reviewer instructions under
-the same pinned, read-only review scope; findings are verified and merged.
-Use `/address-pr-comments <URL>` when a PR already has active feedback that
-needs triage, approved implementation, and provider replies.
+Plans are baselines, not frozen predictions. `amend-plan` records adaptations,
+splits phases, and updates focused decisions; only a change to the objective,
+architecture, or decomposition returns to `/design-plan`. Plans default to HTML
+(Markdown in Brief mode). Legacy HTML logs are migrated before work begins.
 
 ## Miscellaneous
 
@@ -105,14 +69,11 @@ needs triage, approved implementation, and provider replies.
   implementation, research, review, and visual work.
 - `handoff` saves a concise, redacted continuation document outside the current
   workspace for a fresh agent.
-- `writing-for-agents` guides creation of skills and other documents consumed by
-  agents.
 
 ## Credits
 
-`grilling`, `handoff`, `wait-what`, `writing-for-agents`, and
-`improve-codebase-architecture` are copied from, and `tdd` and `test-quality`
-are adapted from,
+`grilling`, `handoff`, `wait-what`, and `improve-codebase-architecture` are
+copied from, and `tdd` and `test-quality` are adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

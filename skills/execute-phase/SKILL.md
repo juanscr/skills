@@ -1,6 +1,6 @@
 ---
 name: execute-phase
-description: Coordinate a phase worker through implementation, validation, review fixes, and approval-gated publication of one approved feature phase.
+description: Use when continue-plan routes a phase action.
 ---
 
 # Execute Phase
@@ -20,8 +20,7 @@ changes. Stop there unless the user explicitly requested publication or a
 - `model-selection`
 
 Use `test-quality` whenever tests change. Use `tdd` only for substantial feature
-work with multiple observable behaviors. If a required skill is unavailable,
-stop and tell the user to make it available.
+work with multiple observable behaviors.
 
 ## Inputs
 
@@ -59,28 +58,21 @@ and diff before accepting the result and updating the Agent's log.
 
 ## Durable artifact boundary
 
-Phases are private execution scaffolding. Keep phase terminology and structure
-only in planning artifacts and the Agent's log.
+Never mention phases in repository-facing artifacts (code, tests, docs, commit
+messages, PR titles and descriptions). Describe observable behavior in product
+and domain language instead. Check the full diff and provider text before
+committing or publishing.
 
-Write every repository-facing artifact in durable product and domain language.
-This includes source code, identifiers, APIs, schemas, configuration, tests,
-fixtures, comments, documentation, READMEs, changelogs, commit messages, pull
-request titles, and pull request descriptions. Translate the approved intent
-into observable behavior, architectural boundaries, or concrete future work;
-never copy or introduce phase names, numbers, labels, boundaries, sequencing,
-or other references to phases.
+## Review mode
 
-Before committing or publishing, inspect the complete changed content and
-provider text. The boundary is satisfied only when no repository-facing
-artifact refers to phases or exposes the temporary execution structure.
+Pick the follow-up `code-review` mode for the delta since the recorded
+Deep-review head using the invalidation rules in its review contract: `Verify`,
+`Light`, or a new `Deep`.
 
 ## 0. Restore and validate state
 
 Read the Agent's log first, then the current phase material. Read the overall
 plan only for linked cross-cutting decisions.
-
-For a legacy log or a schema other than `3`, read and apply
-`../design-plan/references/legacy-normalization.md` before routing.
 
 On resume, start at the recorded unfinished action. Reuse completed work and
 still-valid validation and review evidence; preserve the fixed point, findings,
@@ -196,24 +188,8 @@ Record a material improvement as follow-up instead of expanding the phase when
 it is outside the approved boundary or disproportionate to the concrete impact.
 Include the finding, rationale, and recommended owner in the Agent's log.
 
-After fixes, classify the delta since the recorded Deep-review head using the
-shared `code-review` invalidation rules:
-
-- use `Verify` when changes are confined to retained findings;
-- use `Light` when fixes add bounded directly coupled implementation while
-  preserving the approved design and risk boundaries; or
-- run a new `Deep` review only when the delta invalidates the recorded Deep
-  review.
-
-Verify mode receives the retained finding IDs, expected resolutions, resolution
-commits, original fixed point, Deep-review head, current head, and validation
-evidence. It verifies those findings and directly coupled blockers only.
-
-Light mode uses one combined reviewer and reports blockers or design decisions
-only. A changed `HEAD` by itself never requires another Deep review.
-
-After each fix round, classify the new delta again rather than defaulting to
-Verify. Allow at most two follow-up review rounds after the initial Deep review.
+After each fix round, pick the review mode again (see **Review mode**). Allow
+at most two follow-up review rounds after the initial Deep review.
 Every blocker from the latest Deep, Light, or Verify result gates publication.
 If a blocker survives two fix attempts or blockers remain after the review
 budget without changing the approved plan, mark the phase blocked with kind
@@ -247,18 +223,16 @@ On an explicit publish action:
 1. Reload the Agent's log and inspect the recorded worker branch, HEAD, and
    worktree.
 2. If reviewed state changed, have the worker rerun required validation and
-   classify the delta using the Verify, Light, and Deep invalidation rules in
-   section 4.
+   pick the review mode.
 3. Invoke `pr-description` with the target, approved intent and amendments,
    reviewed diff, commits, validation, and linked artifacts. Use its output
    unchanged after confirming it satisfies the durable artifact boundary.
 4. Push only the recorded source branch.
 5. Create the pull request against the recorded target using the provider's
    approved integration. Invoke `azure-devops-workflow` for Azure DevOps.
-6. Build the title from the observable outcome, not planning vocabulary.
-7. Set the phase to `review` and record the PR URL, creation time, commits, and
+6. Set the phase to `review` and record the PR URL, creation time, commits, and
    exact next action.
-8. Preserve every earlier pull-request entry and wait for feedback or the
+7. Preserve every earlier pull-request entry and wait for feedback or the
    user's merge report.
 
 Only `continue-plan` marks a phase complete after the user reports the pull
@@ -272,8 +246,7 @@ For feedback on an existing phase pull request:
 2. Address only feedback within the current approved phase and amendments.
 3. Route changed design requirements through `amend-plan`.
 4. Assign the approved fixes to the phase worker, including `test-quality`,
-   validation, and local commits. Classify the returned feedback delta using
-   the Verify, Light, and Deep invalidation rules in section 4.
+   validation, and local commits. Pick the review mode for the returned delta.
 5. Wait for explicit approval before pushing follow-up commits, except for an
    explicit `plan-handoff` checkpoint under that skill's rules.
 

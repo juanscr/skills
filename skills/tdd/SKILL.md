@@ -12,12 +12,6 @@ current code. Follow explicit repository guidance. When live evidence changes
 an approved invariant, return the evidence to `execute-phase` for
 classification through `amend-plan`.
 
-This workflow is proportionate when the feature contains multiple related
-observable behaviors that benefit from incremental vertical slices. Use direct
-implementation and targeted validation for CI or build configuration, test-only
-changes, narrow bug fixes, documentation, and small behavior-preserving
-refactors.
-
 Read the `test-quality` skill and both of its references before writing tests.
 
 ## Input
@@ -40,8 +34,7 @@ Before writing a test:
 Do not ask the user to reconfirm seams already approved in the phase spec. If a
 required seam is absent, ambiguous, or contradicted by live code, return the
 exact evidence and affected invariant. `execute-phase` routes it through
-`amend-plan`; do not invent a new interface. For good test practices, invoke
-`test-quality`.
+`amend-plan`; do not invent a new interface.
 
 ## Rules of the loop
 

@@ -17,7 +17,7 @@ the loop with every commenter.
 
 ## 1. Identify pull request source
 
-Extract pull request tile, descriptions and latest snapshot of code.
+Extract pull request title, description and latest snapshot of code.
 Extract all active feedback to the date from the pull request as well.
 
 ## 2. Capture current feedback and intent
@@ -82,6 +82,6 @@ required final validation.
 Invoke `human-voice` for each analyzed active comment. Follow its
 `RESOLVE_WITHOUT_REPLY` result for a suggestion applied as written: post no
 reply and resolve the thread after the pushed fix is verified. Close the
-addressed threads, if possible mark Won't Fix threads that where not accpeted
+addressed threads, if possible mark Won't Fix threads that were not accepted
 explaining why.
 

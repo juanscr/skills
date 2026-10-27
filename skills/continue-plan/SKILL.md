@@ -17,9 +17,8 @@ log. Phase workers return results and amendment evidence through `execute-phase`
 - `amend-plan`
 - `execute-phase`
 
-If a required skill is unavailable, stop and tell the user to make it
-available. `design-plan` is an explicit-user-request re-plan destination, not a
-dependency for ordinary continuation.
+`design-plan` is an explicit-user-request re-plan destination, not a dependency
+for ordinary continuation.
 
 ## Input
 
