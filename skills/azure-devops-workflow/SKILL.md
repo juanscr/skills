@@ -1,6 +1,6 @@
 ---
 name: azure-devops-workflow
-description: Manage Azure DevOps work items and pull requests through the authenticated Azure CLI. Use for any Azure DevOps work-item or PR read or write operation.
+description: Use for any Azure DevOps work-item or PR read or write operation.
 ---
 
 # Azure DevOps Workflow
