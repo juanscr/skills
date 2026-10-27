@@ -40,17 +40,8 @@ Before writing a test:
 Do not ask the user to reconfirm seams already approved in the phase spec. If a
 required seam is absent, ambiguous, or contradicted by live code, return the
 exact evidence and affected invariant. `execute-phase` routes it through
-`amend-plan`; do not invent a new interface.
-
-## What a good test is
-
-Tests verify behavior through public interfaces, not implementation details. A
-test should read like a capability in the phase spec and survive an internal
-refactor.
-
-Expected values must come from an independent source of truth: an approved
-example, a known literal, a protocol contract, or another fact outside the code
-under test.
+`amend-plan`; do not invent a new interface. For good test practices, invoke
+`test-quality`.
 
 ## Rules of the loop
 
@@ -79,17 +70,6 @@ has observable coverage.
 Do not perform broad design refactoring during the loop. `code-review` owns the
 post-implementation refactoring assessment. Small cleanup needed to keep the
 current slice coherent is allowed only when behavior remains covered.
-
-## Test boundaries
-
-Mock only system boundaries such as external services, time, randomness, and
-sometimes databases or filesystems. Prefer real controlled dependencies when
-practical.
-
-Do not mock internal collaborators, private methods, or code owned by the same
-module merely to make a test easy. If a public behavior is difficult to test
-without internal mocks, report the design pressure rather than coupling the
-test to implementation.
 
 ## Completion
 
