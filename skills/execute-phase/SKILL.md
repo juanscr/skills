@@ -26,23 +26,18 @@ worktree. Use `model-selection` before dispatch. Never run two writers on one
 worktree. Reuse the recorded worker when it is still available, and record the
 assignment in the log before dispatch.
 
-Give the worker the phase outcome and acceptance criteria, phase notes,
-amendments, worktree and branch, fixed point, and validation. The worker
-decides how to implement. It uses `tdd` for substantial feature behavior and
-`test-quality` when tests change, and pauses to return evidence when a change
-would alter something the user approved.
-
-The worker returns its worktree, branch, HEAD, commits, changed paths,
-validation, notable choices, and blockers. Inspect the returned diff before
-accepting it.
+Give the worker the phase outcome, acceptance criteria, notes, amendments,
+branch, and validation. The worker decides how to implement. It uses `tdd` for
+substantial feature behavior and `test-quality` when tests change, and pauses
+to return evidence when a change would alter something the user approved.
+Inspect its diff before accepting the result.
 
 ## 1. Restore state
 
-Read the Agent's log, then the phase in the plan and its notes. Check the live
-repository, branch, HEAD, and worker worktree against the log; use the worker's
-worktree for inspection and review. Preserve unrelated changes and ask only
-when they overlap the phase. On resume, continue from the recorded action and
-reuse still-valid validation and review evidence.
+Read the Agent's log, then the phase in the plan and its notes. Reconcile the
+log with the live repository and the worker's worktree. Preserve unrelated
+changes and ask only when they overlap the phase. On resume, continue from the
+recorded action and reuse still-valid validation and review evidence.
 
 When evidence changes the plan, invoke `amend-plan`. Continue unless it returns
 a user decision.
@@ -58,9 +53,8 @@ and record its result.
 
 ## 3. Review
 
-Run one Deep `code-review` over the complete phase diff, from the fixed point to
-HEAD, with the plan, amendments, worker worktree, commits, and validation
-evidence. Record the review head, findings, and result.
+Run one Deep `code-review` of the phase, from the fixed point to HEAD, with the
+plan and validation evidence. Record the review head and findings.
 
 The worker fixes blockers and proportionate material improvements, adding
 regression tests where useful, in new local commits. Record out-of-scope

@@ -37,9 +37,8 @@ recently changed:
 
 - If the user named a direction (a module, subsystem, or pain point), use it
   and skip the inference below.
-- Otherwise, inspect a useful stretch of recent commit history with
-  `git log --oneline` to find hot spots. Let repeatedly changed paths guide the
-  scan. If no hot spot emerges, widen the scope.
+- Otherwise, use recent commit history to find hot spots and let repeatedly
+  changed paths guide the scan. If no hot spot emerges, widen the scope.
 
 Read relevant ADRs before proposing a candidate so the report does not
 re-litigate settled decisions without evidence of real friction.

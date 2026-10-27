@@ -31,12 +31,10 @@ The live repository remains source truth for code.
 ## Take over after a handoff
 
 When the coordinator is `handoff-ready` or another coordinator may still be
-active, confirm nothing else is writing before claiming ownership. Fetch the
-recorded checkpoint branches, verify their SHAs, and reuse or restore the
-worktree from them; a fresh host worktree may be on another branch. Update
-repository and worker paths in the log. A missing checkpoint is a blocker, not
-permission to restart from the target branch. A handoff transfers coordination,
-not approval.
+active, confirm nothing else is writing before claiming ownership. Restore the
+work from the recorded checkpoint branches and update paths in the log. A
+missing checkpoint is a blocker, not permission to restart from the target
+branch. A handoff transfers coordination, not approval.
 
 Then set `coordinator` to yourself, `active`, keeping handoff history.
 

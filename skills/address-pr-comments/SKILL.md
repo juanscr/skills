@@ -15,16 +15,10 @@ the loop with every commenter.
 | --- | --- | --- |
 | Pull request URL | Yes | A GitHub or Azure DevOps pull-request URL. |
 
-## 1. Identify pull request source
+## 1. Gather feedback and intent
 
-Extract pull request title, description and latest snapshot of code.
-Extract all active feedback to the date from the pull request as well.
-
-## 2. Capture current feedback and intent
-
-Extract all active comments from the pull request, including the code location,
-author, body, replies and ID. Identify spec of the pull request by the first of
-these which is known:
+Read the PR, its code, and every active comment thread. Identify the PR's
+intent from the first of these that exists:
 
 1. current approved specification linked from the pull request, plan or
    repository;
@@ -36,7 +30,7 @@ When no approved specification exists, make a best attempt from the linked
 artifact, pull-request description, and diff. State the missing specification
 as a confidence limit; do not block analysis solely because it is absent.
 
-## 3. Classify every active comment
+## 2. Classify every active comment
 
 Verify each comment by classifying:
 
@@ -51,15 +45,15 @@ Deduplicate comments with the same root cause, but preserve every provider
 identifier so every active comment receives its own disposition and eventual
 reply.
 
-## 4. Present the plan
+## 3. Present the plan
 
 Present only the conflicting ones and no-go, with a bigger focus on conflicting
 ones. If all comments are in material fixes, don't require user input and go
-straight to fixing. After conflicting and no-go is decided, we go to step 5. A
+straight to fixing. After conflicting and no-go is decided, go to step 4. A
 user-approved No-Go or Conflicting override becomes an explicit scope decision;
 record that decision with the change.
 
-## 5. Implement with the right test boundary
+## 4. Implement with the right test boundary
 
 For each approved change, choose a proportionate method:
 
@@ -76,7 +70,7 @@ For each approved change, choose a proportionate method:
 Run the repository's smallest existing targeted validation throughout, then its
 required final validation.
 
-## 6. Push and close every comment
+## 5. Push and close every comment
 
 Invoke `human-voice` for each analyzed active comment. Follow its
 `RESOLVE_WITHOUT_REPLY` result for a suggestion applied as written: post no

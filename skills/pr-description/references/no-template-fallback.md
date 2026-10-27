@@ -1,5 +1,4 @@
-Use this structure only after the discovery step in `pr-description` establishes
-that no applicable template exists. Failed or incomplete lookups remain blocked.
+Use this structure when the repository has no PR template.
 
 ```markdown
 ## Why
@@ -11,5 +10,4 @@ that no applicable template exists. Failed or incomplete lookups remain blocked.
 ## Future work
 ```
 
-Omit an empty `Future work` section. Omit another section only when it has no
-truthful content. Apply the main skill's narrative and final-check requirements.
+Omit any section with nothing truthful to say.

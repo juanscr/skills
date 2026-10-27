@@ -4,8 +4,7 @@ Read and follow `review-contract.md`, including its no-validation and bounded
 context-traversal rules.
 
 Review the complete supplied change against its originating request, issue, or
-approved spec. Report problems using the parent skill's finding contract. Do
-not modify code.
+approved plan. Report problems using the parent skill's finding contract.
 
 Trace every material requirement and acceptance criterion into the
 implementation and tests.
@@ -22,5 +21,5 @@ Look for:
 
 Distinguish an implementation defect from evidence that changes an approved
 invariant. For the latter, identify the affected outcome, acceptance criterion,
-public contract, validation requirement, or phase boundary so the calling
-workflow can classify it through `amend-plan`. Do not silently redesign.
+public contract, or decision so the calling workflow can route it through
+`amend-plan`. Do not silently redesign.

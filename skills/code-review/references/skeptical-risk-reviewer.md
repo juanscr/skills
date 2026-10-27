@@ -4,8 +4,7 @@ Read and follow `review-contract.md`, including its no-validation and bounded
 context-traversal rules.
 
 Review the complete supplied change as if it is not ready until the evidence
-supports it. Report problems using the parent skill's finding contract. Do not
-modify code.
+supports it. Report problems using the parent skill's finding contract.
 
 Trace inputs, state, control flow, failures, cleanup, and externally observable
 results across the whole diff and relevant surrounding code.
