@@ -1,6 +1,6 @@
 ---
 name: continue-plan
-description: Restore feature coordination when the user asks to continue a plan or design-plan hands off an approved phase.
+description: Use when continue plan is invoked.
 ---
 
 # Continue Plan

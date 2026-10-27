@@ -1,6 +1,6 @@
 ---
 name: design-plan
-description: Create an approved design baseline and first executable phase, then coordinate child execution. Use only when the user explicitly invokes design-plan.
+description: Use only when the user explicitly invokes design-plan.
 ---
 
 Create the smallest design package that lets the user defend the direction and

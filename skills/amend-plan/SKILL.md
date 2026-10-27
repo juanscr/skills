@@ -1,6 +1,6 @@
 ---
 name: amend-plan
-description: Amend an approved feature plan when execution evidence requires a local deviation, phase split, design change, or blocked-phase resolution.
+description: Use when amending a plan spec.
 ---
 
 # Amend Plan
