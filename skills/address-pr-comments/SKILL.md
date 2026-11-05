@@ -42,8 +42,8 @@ Verify each comment by classifying:
 
 Assess the substance rather than the commenter's wording or authority.
 Deduplicate comments with the same root cause, but preserve every provider
-identifier so every active comment receives its own disposition and eventual
-reply.
+identifier so every active comment receives its own disposition and thread
+closure. A disposition does not require a reply.
 
 ## 3. Present the plan
 
@@ -72,9 +72,13 @@ required final validation.
 
 ## 5. Push and close every comment
 
-Invoke `human-voice` for each analyzed active comment. Follow its
-`RESOLVE_WITHOUT_REPLY` result for a suggestion applied as written: post no
-reply and resolve the thread after the pushed fix is verified. Close the
-addressed threads, if possible mark Won't Fix threads that were not accepted
-explaining why.
+For fully addressed feedback, post no reply and resolve the thread after the
+pushed fix is verified. This is the default whether the suggestion was applied
+literally or addressed with an equivalent implementation. Do not restate the
+suggestion, summarize the fix, or post an acknowledgment just to close a thread.
 
+Invoke `human-voice` only when a disagreement, unanswered question, or meaningful
+implementation difference needs explaining. If it returns
+`RESOLVE_WITHOUT_REPLY`, post no reply. Keep threads open while a question or
+required fix remains unresolved. For feedback not accepted, explain the
+decision and, if supported, mark the thread Won't Fix.

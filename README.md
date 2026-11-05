@@ -25,7 +25,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | `/continue-plan` | Resume a planned feature from its execution-progress file and decide what to do with the current phase. |
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
-| `/address-pr-comments` | Classify active GitHub or Azure DevOps PR feedback, approve the response plan, then implement, push, and reply. |
+| `/address-pr-comments` | Classify active GitHub or Azure DevOps PR feedback, settle conflicting or No-Go decisions, then implement, push, and resolve; reply only when an explanation or question is needed. |
 | `/improve-codebase-architecture` | Identify deepening opportunities and save each as a reusable architecture-improvement spec. |
 | `/handoff` | Hand the session to a fresh agent. With an active plan, it checkpoints and pushes the work and returns the `/continue-plan` command. |
 
@@ -61,7 +61,8 @@ HTML by default. Legacy HTML logs are migrated before work begins.
 - `pr-description` prepares every PR description from the repository template,
   intent, architecture, validation, and future direction.
 - `human-voice` writes concise responses in simple English and avoids redundant
-  replies when a pull-request suggestion can simply be resolved.
+  replies for fully addressed pull-request feedback, including equivalent
+  implementations.
 - `test-quality` supplies the shared rules for behavior-focused tests and
   boundary-aware mocking used by implementation and code review.
 - `model-selection` owns model, reasoning, and context choices for delegated
