@@ -51,8 +51,9 @@ still a stop.
 - Plan changes or a decision on a pending amendment: invoke `amend-plan`, then
   `execute-phase` when it allows.
 - A satisfied blocker condition: verify it, clear the blocker, and continue.
-- A user report that the PR merged: mark the phase `complete`, select the next
-  phase, and set the next action. Never assume a merge.
+- A user report, or a `babysit-pr` verified report, that the PR merged: mark the
+  phase `complete`, select the next phase, and set the next action. Never
+  assume a merge.
 - A context question: answer from the artifacts and repository.
 - Handoff or clearing the session: invoke `handoff`.
 

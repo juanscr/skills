@@ -47,11 +47,11 @@ closure. A disposition does not require a reply.
 
 ## 3. Present the plan
 
-Present only the conflicting ones and no-go, with a bigger focus on conflicting
-ones. If all comments are in material fixes, don't require user input and go
-straight to fixing. After conflicting and no-go is decided, go to step 4. A
-user-approved No-Go or Conflicting override becomes an explicit scope decision;
-record that decision with the change.
+Decide yourself what you can settle. Implement a Conflicting comment when you
+judge the change sound and it needs no user decision, and record why. Present
+only the comments that need the user's judgment, Conflicting ones first. When
+none do, go straight to fixing. A user-approved No-Go or Conflicting override
+becomes an explicit scope decision; record that decision with the change.
 
 ## 4. Implement with the right test boundary
 

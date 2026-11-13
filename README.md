@@ -26,6 +26,7 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 | `/code-review` | Review a local change against a fixed Git revision and its originating issue or spec. |
 | `/pr-review` | Review a GitHub or Azure DevOps PR, inspect findings, and approve which comments may be posted. |
 | `/address-pr-comments` | Classify active GitHub or Azure DevOps PR feedback, settle conflicting or No-Go decisions, then implement, push, and resolve; reply only when an explanation or question is needed. |
+| `/babysit-pr` | Hand off one of your PRs: publish a draft, keep the build green, address reviewer comments, and merge once approved. A background polling script wakes the agent only when something changes. |
 | `/improve-codebase-architecture` | Identify deepening opportunities and save each as a reusable architecture-improvement spec. |
 | `/handoff` | Hand the session to a fresh agent. With an active plan, it checkpoints and pushes the work and returns the `/continue-plan` command. |
 
