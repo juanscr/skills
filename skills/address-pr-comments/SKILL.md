@@ -57,8 +57,8 @@ record that decision with the change.
 
 For each approved change, choose a proportionate method:
 
-- Use red -> green TDD only when feedback changes substantial feature behavior
-  with multiple related observable slices. Invoke `tdd`.
+- When feedback changes substantial feature behavior, write acceptance tests
+  for the new behavior first, confirm they fail, then implement.
 - Implement narrow bug fixes, CI or build changes, test-only changes,
   behavior-preserving refactors, naming changes, comments, and documentation
   directly.

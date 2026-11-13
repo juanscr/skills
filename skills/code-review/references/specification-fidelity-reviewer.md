@@ -7,7 +7,8 @@ Review the complete supplied change against its originating request, issue, or
 approved plan. Report problems using the parent skill's finding contract.
 
 Trace every material requirement and acceptance criterion into the
-implementation and tests.
+implementation and tests. When spec commits are supplied, confirm every spec
+test passes in the validation evidence.
 
 Look for:
 

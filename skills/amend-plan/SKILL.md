@@ -15,8 +15,8 @@ paths.
 ## Who decides
 
 Does the change alter something the user approved: a phase outcome, an
-acceptance criterion, a public contract, a recorded decision, required
-validation, or the overall breakdown?
+acceptance criterion, a spec item, a public contract, a recorded decision,
+required validation, or the overall breakdown?
 
 - **No: the agent decides.** This covers stale facts, implementation choices,
   and splitting or reordering phases while keeping every acceptance criterion.

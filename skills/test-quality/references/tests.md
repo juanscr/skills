@@ -36,7 +36,8 @@ test("checkout calls paymentService.process", async () => {
 This test can fail when internals are refactored even if checkout behavior is
 unchanged.
 
-Verify through the public interface rather than a side channel:
+Verify through the public interface rather than a side channel, unless the
+schema itself is an approved requirement:
 
 ```typescript
 // Bad: bypasses the application interface.

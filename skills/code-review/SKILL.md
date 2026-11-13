@@ -13,9 +13,10 @@ Review one change against its intent, read-only. Follow
 - Base and head revisions; head defaults to `HEAD`. Keep both fixed for the
   run.
 - Originating intent: user request, issue, approved plan, or PR description.
+- Spec commits, when the change follows a plan spec.
 - Validation evidence already produced, when available.
-- Mode: `Deep` by default, or `Follow-up` with the previously reviewed head and
-  the open findings.
+- Mode: `Deep` by default, `Spec` for a spec commit before implementation, or
+  `Follow-up` with the previously reviewed head and the open findings.
 
 Skip generated files, binaries, lock files, and build output unless the intent
 requires them.
@@ -32,6 +33,7 @@ changed.
 | --- | --- |
 | Deep, cohesive change (docs, agent instructions, config, test-only, or where separate lenses would read the same evidence) | One: `combined-reviewer.md` |
 | Deep, production behavior with distinct contracts or call paths | Three in parallel: `code-quality-reviewer.md`, `specification-fidelity-reviewer.md`, `skeptical-risk-reviewer.md` |
+| Spec | One: `spec-reviewer.md`. |
 | Follow-up | One: `follow-up-reviewer.md`. If the delta meets a Deep invalidation condition, return `deep review required` instead. |
 
 Classify by the behavior the change controls, not file extension.
@@ -58,7 +60,7 @@ root causes, keeping every contributing lens. Assign stable IDs (`CR-1`, ...).
 ```markdown
 ## Code Review
 
-**Mode:** Deep | Follow-up
+**Mode:** Deep | Spec | Follow-up
 **Revisions:** `<base>..<head>`
 **Signal:** <n> blocker(s), <n> material improvement(s)
 

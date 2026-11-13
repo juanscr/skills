@@ -32,11 +32,14 @@ In an active Copilot CLI session, run `/skills reload` after installation.
 ## Expected flow
 
 1. Invoke `/design-plan` in the target repository. Ask about anything you
-   don't understand, then approve the plan: problem, design, decisions, and
-   phase outcomes. Implementation details stay with the agent.
+   don't understand, then approve the plan: problem, design, decisions, phase
+   outcomes, and the spec, where each spec item maps to one acceptance
+   criterion. Implementation details stay with the agent.
 2. The same agent coordinates the feature through `continue-plan` and
-   `execute-phase`: a worker implements and commits locally, `code-review`
-   reviews it, and `execution-progress.json` records state.
+   `execute-phase`. Per phase, `spec-executor` turns the spec into failing
+   tests, a spec check verifies them, then an implementer makes them pass
+   without touching them. `code-review` reviews the result, and
+   `execution-progress.json` records state.
 3. Tell the agent to publish. It writes the PR with `pr-description`, pushes,
    and records the PR.
 4. Use `/continue-plan` for PR feedback or to report a merge; it moves to the
@@ -65,13 +68,15 @@ HTML by default. Legacy HTML logs are migrated before work begins.
   implementations.
 - `test-quality` supplies the shared rules for behavior-focused tests and
   boundary-aware mocking used by implementation and code review.
+- `spec-executor` writes a phase's approved spec as failing tests before
+  implementation.
 - `model-selection` owns model, reasoning, and context choices for delegated
   implementation, research, review, and visual work.
 
 ## Credits
 
 `grilling`, `wait-what`, and `improve-codebase-architecture` are copied from,
-and `handoff`, `tdd`, and `test-quality` are adapted from,
+and `handoff` and `test-quality` are adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 They are used under the MIT License. See
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

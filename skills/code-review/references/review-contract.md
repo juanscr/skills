@@ -29,6 +29,11 @@ Independent full review of the complete change. Depth means following every
 material contract and risk, not always launching three agents. Report
 blockers, material improvements, and genuine design decisions.
 
+### Spec
+
+One reviewer on a spec commit, before implementation. Report blockers and
+design decisions only, using the spec executor's failure evidence.
+
 ### Follow-up
 
 One reviewer after fixes to a Deep-reviewed change. Give every open finding a
@@ -63,3 +68,9 @@ Run a new Deep review only when later changes invalidate the earlier review by:
 - substantially expanding the reviewed subsystem.
 
 The fact that `HEAD` changed does not invalidate a review by itself.
+
+## Spec integrity
+
+Spec tests are the tests added or changed by the supplied spec commits. Any
+other change to them is a blocker in every mode, unless an approved amendment
+covers it. Check this before anything else.

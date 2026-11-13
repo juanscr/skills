@@ -1,8 +1,7 @@
 # Third-Party Notices
 
 The `grilling`, `wait-what`, and `improve-codebase-architecture` skills are
-copied from, and the `handoff`, `tdd`, and `test-quality` skills are adapted
-from,
+copied from, and the `handoff` and `test-quality` skills are adapted from,
 [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills).
 
 ## mattpocock/skills

@@ -16,12 +16,32 @@ only what the user must understand, decide, defend, or approve:
    alternative that lost and why.
 4. **Phases**: each phase's outcome, boundary, dependencies, and acceptance
    criteria stated as observable behavior, and why the split is useful.
+   Number criteria `AC-<phase>.<n>`.
+5. **Spec**: the detailed, executable spec that `spec-executor` turns into
+   tests. See below.
 
-Merge or omit sections when the design is small. Leave out file lists, code
+Merge or omit sections 1-3 when the design is small. Leave out file lists, code
 sketches, and work order unless the user asks for them or a decision depends on
 them. Cite facts by path instead of reproducing them. Label repository code
 **Current code**, sketches **Proposed code**, and replaced decisions
 **Superseded**.
+
+### Spec
+
+One table per phase. Each spec item has:
+
+| Field | Contents |
+| --- | --- |
+| ID | `SPEC-<phase>.<n>` |
+| Criterion | Exactly one `AC-<phase>.<n>` it proves. |
+| Kind | `behavior` (observable outcome) or `structural` (the structure is the requirement: schema, public types, module boundaries). |
+| Seam | Where it is verified: E2E, API, UI, schema, or public type. Prefer E2E. |
+| Example | Concrete given / when / then with literal values, or the exact required structure. |
+
+Every acceptance criterion has at least one spec item, and every spec item
+traces to exactly one criterion. Use `structural` only when the user wants the
+structure itself, not as a shortcut for behavior. Spec items are approved with
+the plan.
 
 The plan is the source of truth for the approved design. The Agent's log is the
 source of truth for execution state and how the design changed. Cross-link
@@ -47,7 +67,7 @@ action changes. It contains at least:
 | `targetBranch`, `validation`, `prStrategy` | Target branch, required validation commands, and PR strategy. |
 | `coordinator` | `id`, `status` (`active`, `handoff-ready`, or `complete`), and `updatedAt`. |
 | `current` | `phase`, the exact next `action`, and any pending question for the user. |
-| `phases` | Keyed by stable ID (`"1"`, `"1.1"`): `name`, `status`, notes path when present, and execution state as it exists: source branch, starting SHA (the review fixed point), worker and worktree, commits, validation, review state (Deep-review head, open findings, rounds used), PR, and blocker. |
+| `phases` | Keyed by stable ID (`"1"`, `"1.1"`): `name`, `status`, notes path when present, and execution state as it exists: source branch, starting SHA (the review fixed point), spec (spec commits, spec item to test mapping, spec-check result), workers and worktree, commits, validation, review state (Deep-review head, open findings, rounds used), PR, and blocker. |
 | `amendments` | Each plan change: ID, trigger, evidence, change, who decided, and when. |
 
 Add anything else needed to resume, in whatever shape is clearest. Never record
@@ -58,8 +78,8 @@ Phase status is `not started`, `in progress`, `blocked`, `review`, `complete`,
 or `superseded`. A blocked phase records why and the exact resume condition.
 
 Phase IDs never change. Splitting phase `N` creates `N.1`, `N.2`, and so on and
-marks `N` superseded. Each acceptance criterion moves to exactly one child
-unless the plan marks it shared.
+marks `N` superseded. Each acceptance criterion moves to exactly one child,
+with its spec items, unless the plan marks it shared.
 
 ## Optional task artifact
 

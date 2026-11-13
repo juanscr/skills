@@ -34,7 +34,8 @@ Read and follow:
 2. Ground design claims in repository evidence or a recorded user decision.
    The live repository is source truth.
 3. Keep the plan at the level of outcomes, behavior, boundaries, and decisions.
-   Leave implementation detail to execution.
+   Leave implementation detail to execution, except structure the user makes a
+   structural spec item.
 4. Start simple and go deeper wherever the user asks. Do not pre-teach.
 5. Approval is an affirmative user statement naming the artifact or decision.
 
@@ -49,7 +50,8 @@ repository and feature name are known.
 Create `index.<format>` following the artifact requirements. Split the work
 into coherent, reviewable behavior slices; avoid infrastructure-only phases
 unless independently useful. Later phases may keep unknowns that do not block
-the first.
+the first. Write the Spec section for every phase whose criteria are settled; a
+phase cannot start without it.
 
 When the user asks about something, answer it and fold the answer into the
 plan when it belongs there. Present the plan for explicit approval.
