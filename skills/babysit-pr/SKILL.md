@@ -10,7 +10,8 @@ absolutely necessary; you are authorized to do anything you need while in the
 bounds of the pull request scope.
 
 User is only needed when: proof of presence (PoP) and major architectural decisions
-that significantly impact the spec.
+that significantly impact the spec. For PoP, only wait on it if that is the
+last thing needed for merging the PR.
 
 ## Input
 
