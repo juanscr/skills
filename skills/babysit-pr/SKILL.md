@@ -3,12 +3,14 @@ name: babysit-pr
 description: Use when babysit-pr is invoked.
 ---
 
-# Babysit PR
-
 Take one of the user's pull requests to merge: keep the build green, address
-reviewer feedback, and merge once approved. Invoking this skill authorizes
-publishing a draft, pushing fixes, the self-approval opt-in, and the merge. Use
-`azure-devops-workflow` for Azure DevOps.
+reviewer feedback, and merge once approved. Do your best attempt at getting the
+PR ready for merge (or merged) without user input and only request it when
+absolutely necessary; you are authorized to do anything you need while in the
+bounds of the pull request scope.
+
+User is only needed when: proof of presence (PoP) and major architectural decisions
+that significantly impact the spec.
 
 ## Input
 
