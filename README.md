@@ -69,6 +69,8 @@ HTML by default. Legacy HTML logs are migrated before work begins.
   implementations.
 - `test-quality` supplies the shared rules for behavior-focused tests and
   boundary-aware mocking used by implementation and code review.
+- `acceptance-test-driven-development` defines approved criteria and examples,
+  then separates spec development and implementation into distinct child workers.
 - `spec-executor` writes a phase's approved spec as failing tests before
   implementation.
 - `model-selection` owns model, reasoning, and context choices for delegated

@@ -1,6 +1,6 @@
 ---
 name: spec-executor
-description: Use when execute-phase dispatches spec tests for a phase.
+description: Use as the child worker writing or correcting approved acceptance tests.
 ---
 
 # Spec Executor
@@ -44,6 +44,22 @@ Run the narrowest command covering the spec tests, then existing tests.
 - Existing tests still pass.
 
 Commit the spec tests and stubs in one local commit.
+
+## Resolve with the implementer
+
+Communicate directly with the implementer about test failures and assumptions;
+use the coordinator as relay when needed. Resolve test defects and harness
+problems without user input when the approved contract stays unchanged. Do
+not prescribe the feature implementation or weaken expectations to fit it.
+
+Only you edit spec tests. Coordinate a pause in affected implementation before
+editing or validating on the shared worktree. Commit corrections separately,
+return the updated mapping and evidence, and wait for the coordinator's spec
+check before implementation resumes. If behavior is already implemented,
+show that the corrected test still detects its absence.
+
+If resolution requires changing an approved requirement or decision, return
+the evidence to the coordinator for user approval. Do not reinterpret it.
 
 ## Return
 

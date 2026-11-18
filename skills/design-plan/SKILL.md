@@ -50,8 +50,9 @@ repository and feature name are known.
 Create `index.<format>` following the artifact requirements. Split the work
 into coherent, reviewable behavior slices; avoid infrastructure-only phases
 unless independently useful. Later phases may keep unknowns that do not block
-the first. Write the Spec section for every phase whose criteria are settled; a
-phase cannot start without it.
+the first. Invoke `acceptance-test-driven-development` to define each settled
+phase's criteria and Spec section for plan approval. A phase cannot start
+without an approved spec.
 
 When the user asks about something, answer it and fold the answer into the
 plan when it belongs there. Present the plan for explicit approval.

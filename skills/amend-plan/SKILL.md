@@ -19,8 +19,10 @@ acceptance criterion, a spec item, a public contract, a recorded decision,
 required validation, or the overall breakdown?
 
 - **No: the agent decides.** This covers stale facts, implementation choices,
-  and splitting or reordering phases while keeping every acceptance criterion.
-  Record it, continue, and mention it in the next report to the user.
+  test defects, worker assumptions, and splitting or reordering phases while
+  keeping every acceptance criterion. Correcting a test to match the approved
+  spec is not a spec change. Let workers resolve these issues without user
+  input; record it, continue, and mention it in the next report to the user.
 - **Yes: the user decides.** Record the amendment as pending, block the phase,
   and present the evidence, the affected decision, options, and a
   recommendation. Use `grilling` when more than one decision is open.

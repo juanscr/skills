@@ -21,17 +21,22 @@ committing or publishing.
 
 ## Workers
 
-Two roles, run in sequence on one worktree, never at once:
+Follow `acceptance-test-driven-development`. Use two distinct child workers.
+They may communicate directly, but edit and validate sequentially on one
+worktree, never at once:
 
 - **Spec executor**: runs `spec-executor` on the phase's spec items.
-- **Implementer**: makes every spec test pass. Receives the phase outcome,
-  criteria, spec items, notes, amendments, branch, validation, and spec test
-  mapping. Decides how to implement and may add its own tests, following
-  `test-quality`.
+- **Implementer**: makes every spec test pass. Receives only the approved spec
+  and its criteria, acceptance tests and mapping, repository, branch, and
+  validation commands. No implementation plan or solution sketches.
+  Decides how to implement and may add its own tests,
+  following `test-quality`.
 
 The implementer never modifies spec tests (tests added or changed by a recorded
-spec commit). When it believes a spec test is wrong, it stops and returns
-evidence.
+spec commit). When it believes a spec test is wrong, it pauses affected work
+and exchanges evidence with the spec executor. Resolve test defects and
+implementation assumptions without user input while preserving the approved
+contract. Relay messages if direct worker communication is unavailable.
 
 Prefer a child worktree; otherwise use child agents in the verified source
 worktree. Use `model-selection` before each dispatch. Reuse a recorded worker
@@ -65,12 +70,15 @@ that cannot be tested as written go to `amend-plan`.
 
 ## 3. Implement
 
-Write phase notes when the implementer needs more than the plan. Dispatch the
-implementer and record its result: all spec tests and validation pass.
+Dispatch the implementer with the spec-only handoff above and record its
+result: all spec tests and validation pass.
 
-When the implementer disputes a spec test, decide from the evidence: a test
-defect goes back to the spec executor and a new spec check; a wrong spec item
-goes to `amend-plan`.
+When the implementer disputes a spec test, let the workers resolve it from
+evidence. The spec executor owns corrections; record each new spec commit and
+mapping and run a new spec check before implementation resumes. The
+coordinator settles disagreements within the approved contract without asking
+the user. Only a needed change to an approved requirement or decision goes to
+`amend-plan` for user input.
 
 ## 4. Review
 

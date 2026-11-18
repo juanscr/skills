@@ -17,31 +17,14 @@ only what the user must understand, decide, defend, or approve:
 4. **Phases**: each phase's outcome, boundary, dependencies, and acceptance
    criteria stated as observable behavior, and why the split is useful.
    Number criteria `AC-<phase>.<n>`.
-5. **Spec**: the detailed, executable spec that `spec-executor` turns into
-   tests. See below.
+5. **Spec**: each settled phase's executable examples, defined through
+   `acceptance-test-driven-development` and approved with the plan.
 
 Merge or omit sections 1-3 when the design is small. Leave out file lists, code
 sketches, and work order unless the user asks for them or a decision depends on
 them. Cite facts by path instead of reproducing them. Label repository code
 **Current code**, sketches **Proposed code**, and replaced decisions
 **Superseded**.
-
-### Spec
-
-One table per phase. Each spec item has:
-
-| Field | Contents |
-| --- | --- |
-| ID | `SPEC-<phase>.<n>` |
-| Criterion | Exactly one `AC-<phase>.<n>` it proves. |
-| Kind | `behavior` (observable outcome) or `structural` (the structure is the requirement: schema, public types, module boundaries). |
-| Seam | Where it is verified: E2E, API, UI, schema, or public type. Prefer E2E. |
-| Example | Concrete given / when / then with literal values, or the exact required structure. |
-
-Every acceptance criterion has at least one spec item, and every spec item
-traces to exactly one criterion. Use `structural` only when the user wants the
-structure itself, not as a shortcut for behavior. Spec items are approved with
-the plan.
 
 The plan is the source of truth for the approved design. The Agent's log is the
 source of truth for execution state and how the design changed. Cross-link
